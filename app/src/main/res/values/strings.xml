@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">ElegantErowid</string>
 
+    <string name="home_message">Welcome!\nThere is nothing to show at the moment.\nHow about selecting an index from the navigation drawer?</string>
+    <string name="quick_select">Quick Selection</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
