@@ -8,4 +8,21 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- Navigation drawer terms -->
+    <string name="chems">Chemicals</string>
+    <string name="plants">Plants</string>
+    <string name="herbs">Herbs</string>
+    <string name="pharms">Pharms</string>
+    <string name="smarts">Smarts</string>
+    <string name="animals">Animals</string>
+
+    <string name="basics">Basics</string>
+    <string name="effects">Effects</string>
+    <string name="images">Images</string>
+    <string name="health">Health</string>
+    <string name="law">Law</string>
+    <string name="dose">Dose</string>
+    <string name="chemistry">Chemistry</string>
+    <string name="research_chem">Research Chemical</string>
 </resources>

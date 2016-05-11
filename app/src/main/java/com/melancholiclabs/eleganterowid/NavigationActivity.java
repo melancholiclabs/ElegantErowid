@@ -2,6 +2,7 @@ package com.melancholiclabs.eleganterowid;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -68,22 +69,73 @@ public class NavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_chem_index) {
+            displayView(id);
+        } else if (id == R.id.nav_plant_index) {
+            displayView(id);
+        } else if (id == R.id.nav_herb_index) {
+            displayView(id);
+        } else if (id == R.id.nav_pharm_index) {
+            displayView(id);
+        } else if (id == R.id.nav_smart_index) {
+            displayView(id);
+        } else if (id == R.id.nav_animal_index) {
+            displayView(id);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    // Displays a view based off what viewId is passed
+    public void displayView(int viewId) {
+        Fragment fragment = null;
+        String title = getString(R.string.app_name);
+
+        /*
+        // Need to figure out how to call a certain index or if needed create all the separate fragments
+        switch (viewId) {
+            case R.id.nav_chem_index:
+                fragment = new IndexFragment().newInstance("chemIndex");
+                title = "Chemicals";
+                break;
+            case R.id.nav_plant_index:
+                fragment = new IndexFragment().newInstance("plantIndex");
+                title = "Plants";
+                break;
+            case R.id.nav_herb_index:
+                fragment = new IndexFragment().newInstance("herbIndex");
+                title = "Herbs";
+                break;
+            case R.id.nav_pharm_index:
+                fragment = new IndexFragment().newInstance("pharmIndex");
+                title = "Pharms";
+                break;
+            case R.id.nav_smart_index:
+                fragment = new IndexFragment().newInstance("smartIndex");
+                title = "Smarts";
+                break;
+            case R.id.nav_animal_index:
+                fragment = new IndexFragment().newInstance("animalIndex");
+                title = "Animals";
+                break;
+        }
+
+        // Transitions to the new fragment while replacing the fragment_container
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fragment_container, fragment);
+            ft.commit();
+        }
+
+        // Set the toolbar title
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+        }
+        */
+        // Closes the navigation drawer to go to new view
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
     }
 }
