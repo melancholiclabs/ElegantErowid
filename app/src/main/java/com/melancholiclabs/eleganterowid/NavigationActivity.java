@@ -16,17 +16,27 @@ import android.view.MenuItem;
 
 import com.melancholiclabs.eleganterowid.index.IndexFragment;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IndexFragment.OnFragmentInteractionListener {
 
-    public static final String chemIndex = "http://104.131.56.118/erowid/api.php/chemIndex?columns=id,name,effectsClassification,category&transform=1";
-    public static final String plantIndex = "http://104.131.56.118/erowid/api.php/plantIndex?columns=id,name,effectsClassification,category&transform=1";
-    public static final String herbIndex = "http://104.131.56.118/erowid/api.php/herbIndex?columns=id,name,botanicalClassification,category&transform=1";
-    public static final String pharmIndex = "http://104.131.56.118/erowid/api.php/pharmIndex?columns=id,name,effectsClassification,category&transform=1";
-    public static final String smartIndex = "http://104.131.56.118/erowid/api.php/smartIndex?columns=id,name,effectsClassification,category&transform=1";
-    public static final String animalIndex = "http://104.131.56.118/erowid/api.php/animalIndex?columns=id,name,effectsClassification,category&transform=1";
+    public static final String CHEM_URL = "http://104.131.56.118/erowid/api.php/chemIndex?columns=id,name,effectsClassification,category&transform=1";
+    public static final String PLANT_URL = "http://104.131.56.118/erowid/api.php/plantIndex?columns=id,name,effectsClassification,category&transform=1";
+    public static final String HERB_URL = "http://104.131.56.118/erowid/api.php/herbIndex?columns=id,name,botanicalClassification,category&transform=1";
+    public static final String PHARM_URL = "http://104.131.56.118/erowid/api.php/pharmIndex?columns=id,name,effectsClassification,category&transform=1";
+    public static final String SMART_URL = "http://104.131.56.118/erowid/api.php/smartIndex?columns=id,name,effectsClassification,category&transform=1";
+    public static final String ANIMAL_URL = "http://104.131.56.118/erowid/api.php/animalIndex?columns=id,name,effectsClassification,category&transform=1";
 
     public static ArrayList<IndexItem> mainIndex = new ArrayList<>();
 
@@ -36,6 +46,9 @@ public class NavigationActivity extends AppCompatActivity
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        FetchMainIndexTask fetchMainIndexTask = new FetchMainIndexTask();
+        fetchMainIndexTask.execute();
 
         HomeFragment homeFragment = HomeFragment.newInstance();
 
@@ -180,9 +193,119 @@ public class NavigationActivity extends AppCompatActivity
         }
     }
 
-    public class FetchMainIndexTask extends AsyncTask<String, Void, Void> {
+    public class FetchMainIndexTask extends AsyncTask<Void, Void, Void> {
+        /**
+         * Take the String representing the complete forecast in JSON Format and
+         * pull out the data we need to construct the Strings needed for the wireframes.
+         * <p/>
+         * Fortunately parsing is easy:  constructor takes the JSON string and converts it
+         * into an Object hierarchy for us.
+         */
+        private void loadIndexFromJSON(String forecastJsonStr, String indexType)
+                throws JSONException {
+
+            // These are the names of the JSON objects that need to be extracted.
+            JSONObject forecastJson = new JSONObject(forecastJsonStr);
+            JSONArray substanceArray = forecastJson.getJSONArray(indexType);
+
+            for (int i = 0; i < substanceArray.length(); i++) {
+                // For now, using the format "Day, description, hi/low"
+                String substanceID;
+                String substanceName;
+                String substanceCaption;
+                String substanceCategory;
+
+                // Get the JSON object representing the day
+                JSONObject substance = substanceArray.getJSONObject(i);
+
+                substanceID = substance.getString("id");
+                substanceName = substance.getString("name");
+                if (!indexType.equals("herbIndex")) {
+                    substanceCaption = substance.getString("effectsClassification");
+                } else {
+                    substanceCaption = substance.getString("botanicalClassification");
+                }
+                substanceCategory = substance.getString("category");
+
+                mainIndex.add(new IndexItem(substanceID, substanceName, substanceCaption, substanceCategory));
+            }
+        }
+
+        private Void loadIndex(String urlString, String indexType) {
+            // These two need to be declared outside the try/catch
+            // so that they can be closed in the finally block.
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            // Will contain the raw JSON response as a string.
+            String indexJsonStr = null;
+
+            try {
+
+                URL url = new URL(urlString);
+
+                // Create the request to OpenWeatherMap, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuilder buffer = new StringBuilder();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line);
+                    buffer.append("\n");
+                }
+
+                if (buffer.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    return null;
+                }
+                indexJsonStr = buffer.toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+                // If the code didn't successfully get the weather data, there's no point in attempting
+                // to parse it.
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            try {
+                loadIndexFromJSON(indexJsonStr, indexType);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(Void... params) {
+            loadIndex(CHEM_URL, "chemIndex");
+            loadIndex(PLANT_URL, "plantIndex");
+            loadIndex(HERB_URL, "herbIndex");
+            loadIndex(PHARM_URL, "pharmIndex");
+            loadIndex(SMART_URL, "smartIndex");
+            loadIndex(ANIMAL_URL, "animalIndex");
             return null;
         }
     }
