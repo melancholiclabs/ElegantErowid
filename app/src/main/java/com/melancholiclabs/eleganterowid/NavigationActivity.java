@@ -1,8 +1,11 @@
 package com.melancholiclabs.eleganterowid;
 
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,8 +14,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.melancholiclabs.eleganterowid.index.IndexFragment;
+
+import java.util.ArrayList;
+
 public class NavigationActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, IndexFragment.OnFragmentInteractionListener {
+
+    public static final String chemIndex = "http://104.131.56.118/erowid/api.php/chemIndex?columns=id,name,effectsClassification,category&transform=1";
+    public static final String plantIndex = "http://104.131.56.118/erowid/api.php/plantIndex?columns=id,name,effectsClassification,category&transform=1";
+    public static final String herbIndex = "http://104.131.56.118/erowid/api.php/herbIndex?columns=id,name,botanicalClassification,category&transform=1";
+    public static final String pharmIndex = "http://104.131.56.118/erowid/api.php/pharmIndex?columns=id,name,effectsClassification,category&transform=1";
+    public static final String smartIndex = "http://104.131.56.118/erowid/api.php/smartIndex?columns=id,name,effectsClassification,category&transform=1";
+    public static final String animalIndex = "http://104.131.56.118/erowid/api.php/animalIndex?columns=id,name,effectsClassification,category&transform=1";
+
+    public static ArrayList<IndexItem> mainIndex = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +36,12 @@ public class NavigationActivity extends AppCompatActivity
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        HomeFragment homeFragment = HomeFragment.newInstance();
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container, homeFragment);
+        ft.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -93,7 +115,6 @@ public class NavigationActivity extends AppCompatActivity
         Fragment fragment = null;
         String title = getString(R.string.app_name);
 
-        /*
         // Need to figure out how to call a certain index or if needed create all the separate fragments
         switch (viewId) {
             case R.id.nav_chem_index:
@@ -126,6 +147,7 @@ public class NavigationActivity extends AppCompatActivity
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_container, fragment);
+            ft.addToBackStack("index");
             ft.commit();
         }
 
@@ -133,9 +155,35 @@ public class NavigationActivity extends AppCompatActivity
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
         }
-        */
+
         // Closes the navigation drawer to go to new view
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        System.out.println(uri);
+    }
+
+    public class IndexItem {
+        public String id;
+        public String name;
+        public String caption;
+        public String category;
+
+        public IndexItem(String id, String name, String caption, String category) {
+            this.id = id;
+            this.name = name;
+            this.caption = caption;
+            this.category = category;
+        }
+    }
+
+    public class FetchMainIndexTask extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... params) {
+            return null;
+        }
     }
 }
