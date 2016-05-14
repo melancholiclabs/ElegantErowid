@@ -159,6 +159,9 @@ public class NavigationActivity extends AppCompatActivity
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_container, fragment);
+            if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+                getSupportFragmentManager().popBackStack();
+            }
             ft.addToBackStack("index");
             ft.commit();
         }
@@ -313,4 +316,6 @@ public class NavigationActivity extends AppCompatActivity
             return null;
         }
     }
+
+
 }
