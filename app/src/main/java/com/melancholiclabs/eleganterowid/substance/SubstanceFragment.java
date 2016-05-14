@@ -15,8 +15,8 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TabWidget;
 
-import com.melancholiclabs.eleganterowid.HomeFragment;
 import com.melancholiclabs.eleganterowid.R;
+import com.melancholiclabs.eleganterowid.pages.PageFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +36,8 @@ import java.net.URL;
  */
 public class SubstanceFragment extends Fragment {
 
-    private static final String URL_PREFIX = "http://http://104.131.56.118/erowid/api.php/?filter=id,eq,";
+    private static final String URL_PREFIX = "http://104.131.56.118/erowid/api.php/";
+    private static final String URL_MIDDLE = "?filter=id,eq,";
     private static final String URL_SUFFIX = "&comlumns=&columns=effectsClassification,botanicalClassification,commonNames,chemicalName,uses,description,imageURL,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL,researchChemicalsURL&transform=1";
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -121,27 +122,30 @@ public class SubstanceFragment extends Fragment {
                              Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.fragment_substance, container, false);
 
+        FetchSubstanceTask fetchSubstanceTask = new FetchSubstanceTask();
+        fetchSubstanceTask.execute();
+
         mTabHost = (FragmentTabHost) myView.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), R.id.realtabcontent);
 
         mTabHost.addTab(mTabHost.newTabSpec("Main").setIndicator("Main"),
-                HomeFragment.class, null);
+                PageFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("Basics").setIndicator("Basics"),
-                HomeFragment.class, null);
+                PageFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("Effects").setIndicator("Effects"),
-                HomeFragment.class, null);
+                PageFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("Images").setIndicator("Images"),
-                HomeFragment.class, null);
+                PageFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("Health").setIndicator("Health"),
-                HomeFragment.class, null);
+                PageFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("Law").setIndicator("Law"),
-                HomeFragment.class, null);
+                PageFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("Dose").setIndicator("Dose"),
-                HomeFragment.class, null);
+                PageFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("Chemistry").setIndicator("Chemistry"),
-                HomeFragment.class, null);
+                PageFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("Research Chemical").setIndicator("Research Chemical"),
-                HomeFragment.class, null);
+                PageFragment.class, null);
 
         TabWidget tw = (TabWidget) myView.findViewById(android.R.id.tabs);
         LinearLayout ll = (LinearLayout) tw.getParent();
@@ -205,7 +209,7 @@ public class SubstanceFragment extends Fragment {
 
             try {
 
-                URL url = new URL(URL_PREFIX + mId + URL_SUFFIX);
+                URL url = new URL(URL_PREFIX + mIndexType + URL_MIDDLE + mId + URL_SUFFIX);
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
