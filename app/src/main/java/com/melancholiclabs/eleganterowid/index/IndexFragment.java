@@ -123,7 +123,6 @@ public class IndexFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... params) {
             for (IndexItem item : NavigationActivity.mainIndex) {
-                System.out.println(item.toString());
                 if (item.category.equals(mCategory)) index.add(item);
             }
             return null;
