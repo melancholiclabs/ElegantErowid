@@ -1,7 +1,9 @@
 package com.melancholiclabs.eleganterowid.substance;
 
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
@@ -16,12 +18,26 @@ import android.widget.TabWidget;
 import com.melancholiclabs.eleganterowid.HomeFragment;
 import com.melancholiclabs.eleganterowid.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SubstanceFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class SubstanceFragment extends Fragment {
+
+    private static final String URL_PREFIX = "http://http://104.131.56.118/erowid/api.php/?filter=id,eq,";
+    private static final String URL_SUFFIX = "&comlumns=&columns=effectsClassification,botanicalClassification,commonNames,chemicalName,uses,description,imageURL,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL,researchChemicalsURL&transform=1";
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_ID = "id";
@@ -32,6 +48,26 @@ public class SubstanceFragment extends Fragment {
     private String mId;
     private String mName;
     private String mCategory;
+    private String mIndexType;
+
+    private String imageURL;
+    private String effectsClassification;
+    private String botanicalClassification;
+    private String chemicalName;
+    private String commonNames;
+    private String uses;
+    private String description;
+
+    private String basicsURL;
+    private String effectsURL;
+    private String imagesURL;
+    private String healthURL;
+    private String lawURL;
+    private String doseURL;
+    private String chemistryURL;
+    private String researchChemicalURL;
+
+    private Bitmap substanceImage;
 
     public SubstanceFragment() {
     }
@@ -63,6 +99,20 @@ public class SubstanceFragment extends Fragment {
             mId = getArguments().getString(ARG_ID);
             mName = getArguments().getString(ARG_NAME);
             mCategory = getArguments().getString(ARG_CATEGORY);
+
+            if (mCategory.equals("Chemicals")) {
+                mIndexType = "chemIndex";
+            } else if (mCategory.equals("Plants")) {
+                mIndexType = "plantIndex";
+            } else if (mCategory.equals("Herbs")) {
+                mIndexType = "herbIndex";
+            } else if (mCategory.equals("Pharms")) {
+                mIndexType = "pharmIndex";
+            } else if (mCategory.equals("Smarts")) {
+                mIndexType = "smartIndex";
+            } else if (mCategory.equals("Animals")) {
+                mIndexType = "animalIndex";
+            }
         }
     }
 
@@ -74,23 +124,23 @@ public class SubstanceFragment extends Fragment {
         mTabHost = (FragmentTabHost) myView.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), R.id.realtabcontent);
 
-        mTabHost.addTab(mTabHost.newTabSpec("fragmentb").setIndicator("Main"),
+        mTabHost.addTab(mTabHost.newTabSpec("Main").setIndicator("Main"),
                 HomeFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("fragmentc").setIndicator("Basics"),
+        mTabHost.addTab(mTabHost.newTabSpec("Basics").setIndicator("Basics"),
                 HomeFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("fragmentd").setIndicator("Effects"),
+        mTabHost.addTab(mTabHost.newTabSpec("Effects").setIndicator("Effects"),
                 HomeFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("fragmentd").setIndicator("Images"),
+        mTabHost.addTab(mTabHost.newTabSpec("Images").setIndicator("Images"),
                 HomeFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("fragmentd").setIndicator("Health"),
+        mTabHost.addTab(mTabHost.newTabSpec("Health").setIndicator("Health"),
                 HomeFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("fragmentd").setIndicator("Law"),
+        mTabHost.addTab(mTabHost.newTabSpec("Law").setIndicator("Law"),
                 HomeFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("fragmentd").setIndicator("Dose"),
+        mTabHost.addTab(mTabHost.newTabSpec("Dose").setIndicator("Dose"),
                 HomeFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("fragmentd").setIndicator("Chemistry"),
+        mTabHost.addTab(mTabHost.newTabSpec("Chemistry").setIndicator("Chemistry"),
                 HomeFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("fragmentd").setIndicator("Research Chemical"),
+        mTabHost.addTab(mTabHost.newTabSpec("Research Chemical").setIndicator("Research Chemical"),
                 HomeFragment.class, null);
 
         TabWidget tw = (TabWidget) myView.findViewById(android.R.id.tabs);
@@ -108,4 +158,112 @@ public class SubstanceFragment extends Fragment {
         return myView;
     }
 
+    public class FetchSubstanceTask extends AsyncTask<Void, Void, Void> {
+        /**
+         * Take the String representing the complete forecast in JSON Format and
+         * pull out the data we need to construct the Strings needed for the wireframes.
+         * <p>
+         * Fortunately parsing is easy:  constructor takes the JSON string and converts it
+         * into an Object hierarchy for us.
+         */
+        private void loadIndexFromJSON(String substanceJsonStr)
+                throws JSONException {
+
+            // These are the names of the JSON objects that need to be extracted.
+            JSONObject forecastJson = new JSONObject(substanceJsonStr);
+            JSONArray substanceArray = forecastJson.getJSONArray(mIndexType);
+
+            // Get the JSON object representing the day
+            JSONObject substance = substanceArray.getJSONObject(0);
+
+            imagesURL = substance.getString("imagesURL");
+            effectsClassification = substance.getString("effectsClassification");
+            botanicalClassification = substance.getString("botanicalClassification");
+            chemicalName = substance.getString("chemicalName");
+            commonNames = substance.getString("commonNames");
+            uses = substance.getString("uses");
+            description = substance.getString("description");
+            basicsURL = substance.getString("basicsURL");
+            effectsURL = substance.getString("effectsURL");
+            imagesURL = substance.getString("imagesURL");
+            healthURL = substance.getString("healthURL");
+            lawURL = substance.getString("lawURL");
+            doseURL = substance.getString("doseURL");
+            chemistryURL = substance.getString("chemistryURL");
+            researchChemicalURL = substance.getString("researchChemicalURL");
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // These two need to be declared outside the try/catch
+            // so that they can be closed in the finally block.
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            // Will contain the raw JSON response as a string.
+            String substanceJsonStr = null;
+
+            try {
+
+                URL url = new URL(URL_PREFIX + mId + URL_SUFFIX);
+
+                // Create the request to OpenWeatherMap, and open the connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Read the input stream into a String
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuilder buffer = new StringBuilder();
+                if (inputStream == null) {
+                    // Nothing to do.
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
+                    // But it does make debugging a *lot* easier if you print out the completed
+                    // buffer for debugging.
+                    buffer.append(line);
+                    buffer.append("\n");
+                }
+
+                if (buffer.length() == 0) {
+                    // Stream was empty.  No point in parsing.
+                    return null;
+                }
+                substanceJsonStr = buffer.toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+                // If the code didn't successfully get the weather data, there's no point in attempting
+                // to parse it.
+                return null;
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            try {
+                loadIndexFromJSON(substanceJsonStr);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+    }
 }
