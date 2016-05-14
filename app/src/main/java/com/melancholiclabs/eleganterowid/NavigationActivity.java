@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.melancholiclabs.eleganterowid.index.IndexFragment;
+import com.melancholiclabs.eleganterowid.substance.SubstanceFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -178,7 +179,14 @@ public class NavigationActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(IndexItem item) {
-        System.err.println(item.toString());
+        Fragment fragment = SubstanceFragment.newInstance(item.id, item.name, item.category);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container, fragment);
+        ft.addToBackStack("substance");
+        ft.commit();
+
+        getSupportActionBar().setTitle(item.name);
     }
 
     public class IndexItem {
@@ -316,6 +324,4 @@ public class NavigationActivity extends AppCompatActivity
             return null;
         }
     }
-
-
 }
