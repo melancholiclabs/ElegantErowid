@@ -1,14 +1,20 @@
 package com.melancholiclabs.eleganterowid.index;
 
 import android.content.Context;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.melancholiclabs.eleganterowid.NavigationActivity;
+import com.melancholiclabs.eleganterowid.NavigationActivity.IndexItem;
 import com.melancholiclabs.eleganterowid.R;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,30 +27,28 @@ import com.melancholiclabs.eleganterowid.R;
 public class IndexFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-
+    private static final String ARG_CATEGORY = "category";
+    private static ArrayList<IndexItem> index = new ArrayList<>();
+    private static IndexRecyclerViewAdapter indexRecyclerViewAdapter;
     // TODO: Rename and change types of parameters
-    private String mParam1;
-
+    private String mCategory;
     private OnFragmentInteractionListener mListener;
 
     public IndexFragment() {
-        // Required empty public constructor
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param category Parameter 1.
      * @return A new instance of fragment IndexFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static IndexFragment newInstance(String param1) {
+    public static IndexFragment newInstance(String category) {
         IndexFragment fragment = new IndexFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_CATEGORY, category);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,22 +57,28 @@ public class IndexFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mCategory = getArguments().getString(ARG_CATEGORY);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_index, container, false);
-    }
+        View myView = inflater.inflate(R.layout.fragment_index_list, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+        if (myView instanceof RecyclerView) {
+            Context context = myView.getContext();
+            RecyclerView recyclerView = (RecyclerView) myView;
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+            FetchIndexTypeTask fetchIndexTypeTask = new FetchIndexTypeTask();
+            fetchIndexTypeTask.execute();
+
+            indexRecyclerViewAdapter = new IndexRecyclerViewAdapter(index, mListener);
+            recyclerView.setAdapter(indexRecyclerViewAdapter);
         }
+
+        return myView;
     }
 
     @Override
@@ -99,7 +109,30 @@ public class IndexFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(IndexItem item);
+    }
+
+    public class FetchIndexTypeTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            index.clear();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            for (IndexItem item : NavigationActivity.mainIndex) {
+                System.out.println(item.toString());
+                if (item.category.equals(mCategory)) index.add(item);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            indexRecyclerViewAdapter.notifyDataSetChanged();
+        }
     }
 }

@@ -1,6 +1,5 @@
 package com.melancholiclabs.eleganterowid;
 
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -131,27 +130,27 @@ public class NavigationActivity extends AppCompatActivity
         // Need to figure out how to call a certain index or if needed create all the separate fragments
         switch (viewId) {
             case R.id.nav_chem_index:
-                fragment = new IndexFragment().newInstance("chemIndex");
+                fragment = new IndexFragment().newInstance("Chemicals");
                 title = "Chemicals";
                 break;
             case R.id.nav_plant_index:
-                fragment = new IndexFragment().newInstance("plantIndex");
+                fragment = new IndexFragment().newInstance("Plants");
                 title = "Plants";
                 break;
             case R.id.nav_herb_index:
-                fragment = new IndexFragment().newInstance("herbIndex");
+                fragment = new IndexFragment().newInstance("Herbs");
                 title = "Herbs";
                 break;
             case R.id.nav_pharm_index:
-                fragment = new IndexFragment().newInstance("pharmIndex");
+                fragment = new IndexFragment().newInstance("Pharms");
                 title = "Pharms";
                 break;
             case R.id.nav_smart_index:
-                fragment = new IndexFragment().newInstance("smartIndex");
+                fragment = new IndexFragment().newInstance("Smarts");
                 title = "Smarts";
                 break;
             case R.id.nav_animal_index:
-                fragment = new IndexFragment().newInstance("animalIndex");
+                fragment = new IndexFragment().newInstance("Animals");
                 title = "Animals";
                 break;
         }
@@ -175,8 +174,8 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-        System.out.println(uri);
+    public void onFragmentInteraction(IndexItem item) {
+        System.err.println(item.toString());
     }
 
     public class IndexItem {
@@ -190,6 +189,11 @@ public class NavigationActivity extends AppCompatActivity
             this.name = name;
             this.caption = caption;
             this.category = category;
+        }
+
+        @Override
+        public String toString() {
+            return id + ", " + name + ", " + caption + ", " + category;
         }
     }
 
