@@ -33,7 +33,7 @@ public class NavigationActivity extends AppCompatActivity
 
     public static final String CHEM_URL = "http://104.131.56.118/erowid/api.php/chemIndex?columns=id,name,effectsClassification,category&transform=1";
     public static final String PLANT_URL = "http://104.131.56.118/erowid/api.php/plantIndex?columns=id,name,effectsClassification,category&transform=1";
-    public static final String HERB_URL = "http://104.131.56.118/erowid/api.php/herbIndex?columns=id,name,botanicalClassification,category&transform=1";
+    public static final String HERB_URL = "http://104.131.56.118/erowid/api.php/herbIndex?columns=id,name,commonNames,category&transform=1";
     public static final String PHARM_URL = "http://104.131.56.118/erowid/api.php/pharmIndex?columns=id,name,effectsClassification,category&transform=1";
     public static final String SMART_URL = "http://104.131.56.118/erowid/api.php/smartIndex?columns=id,name,effectsClassification,category&transform=1";
     public static final String ANIMAL_URL = "http://104.131.56.118/erowid/api.php/animalIndex?columns=id,name,effectsClassification,category&transform=1";
@@ -238,11 +238,15 @@ public class NavigationActivity extends AppCompatActivity
                 if (!indexType.equals("herbIndex")) {
                     substanceCaption = substance.getString("effectsClassification");
                 } else {
-                    substanceCaption = substance.getString("botanicalClassification");
+                    substanceCaption = substance.getString("commonNames");
                 }
                 substanceCategory = substance.getString("category");
 
-                mainIndex.add(new IndexItem(substanceID, substanceName, substanceCaption, substanceCategory));
+                IndexItem indexItem = new IndexItem(substanceID, substanceName, substanceCaption, substanceCategory);
+
+                if (!mainIndex.contains(indexItem)) {
+                    mainIndex.add(indexItem);
+                }
             }
         }
 

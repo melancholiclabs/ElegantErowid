@@ -20,14 +20,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="2dp">
 
             <TextView
                 android:id="@+id/index_name_view"
                 style="@style/Base.TextAppearance.AppCompat.Headline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="4dp"
                 android:text="Substance Name" />
 
             <TextView
@@ -35,7 +35,7 @@
                 style="@style/Base.TextAppearance.AppCompat.Subhead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="4dp"
                 android:text="Substance Class" />
 
         </LinearLayout>

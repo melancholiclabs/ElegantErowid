@@ -32,6 +32,7 @@ public class PageFragment extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+
     }
 
     @Override

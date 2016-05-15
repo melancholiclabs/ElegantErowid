@@ -114,6 +114,9 @@ public class SubstanceFragment extends Fragment {
             } else if (mCategory.equals("Animals")) {
                 mIndexType = "animalIndex";
             }
+
+            FetchSubstanceTask fetchSubstanceTask = new FetchSubstanceTask();
+            fetchSubstanceTask.execute();
         }
     }
 
@@ -128,13 +131,13 @@ public class SubstanceFragment extends Fragment {
         mTabHost = (FragmentTabHost) myView.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), R.id.realtabcontent);
 
-        mTabHost.addTab(mTabHost.newTabSpec("Main").setIndicator("Main"),
-                PageFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("Basics").setIndicator("Basics"),
                 PageFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("Effects").setIndicator("Effects"),
                 PageFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("Images").setIndicator("Images"),
+                PageFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec("Health").setIndicator("Health"),
                 PageFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec("Health").setIndicator("Health"),
                 PageFragment.class, null);
@@ -166,7 +169,7 @@ public class SubstanceFragment extends Fragment {
         /**
          * Take the String representing the complete forecast in JSON Format and
          * pull out the data we need to construct the Strings needed for the wireframes.
-         * <p>
+         * <p/>
          * Fortunately parsing is easy:  constructor takes the JSON string and converts it
          * into an Object hierarchy for us.
          */
@@ -180,13 +183,37 @@ public class SubstanceFragment extends Fragment {
             // Get the JSON object representing the day
             JSONObject substance = substanceArray.getJSONObject(0);
 
-            imagesURL = substance.getString("imagesURL");
-            effectsClassification = substance.getString("effectsClassification");
-            botanicalClassification = substance.getString("botanicalClassification");
-            chemicalName = substance.getString("chemicalName");
-            commonNames = substance.getString("commonNames");
-            uses = substance.getString("uses");
-            description = substance.getString("description");
+            try {
+                imagesURL = substance.getString("imagesURL");
+            } catch (JSONException e) {
+                // Do nothing
+            }
+            try {
+                effectsClassification = substance.getString("effectsClassification");
+            } catch (JSONException e) {
+                // Do nothing
+            }
+            try {
+                botanicalClassification = substance.getString("botanicalClassification");
+            } catch (JSONException e) {
+                // Do nothing
+            }
+            try {
+                commonNames = substance.getString("commonNames");
+            } catch (JSONException e) {
+                // Do nothing
+            }
+            try {
+                uses = substance.getString("uses");
+            } catch (JSONException e) {
+                // Do nothing
+            }
+            try {
+                description = substance.getString("description");
+            } catch (JSONException e) {
+                // Do nothing
+            }
+
             basicsURL = substance.getString("basicsURL");
             effectsURL = substance.getString("effectsURL");
             imagesURL = substance.getString("imagesURL");
@@ -194,7 +221,11 @@ public class SubstanceFragment extends Fragment {
             lawURL = substance.getString("lawURL");
             doseURL = substance.getString("doseURL");
             chemistryURL = substance.getString("chemistryURL");
-            researchChemicalURL = substance.getString("researchChemicalURL");
+            try {
+                researchChemicalURL = substance.getString("researchChemicalURL");
+            } catch (JSONException e) {
+                // Do nothing
+            }
         }
 
         @Override
@@ -263,11 +294,6 @@ public class SubstanceFragment extends Fragment {
                 e.printStackTrace();
             }
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
         }
     }
 }
