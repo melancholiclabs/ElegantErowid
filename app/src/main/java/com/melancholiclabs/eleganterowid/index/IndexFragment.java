@@ -16,6 +16,8 @@ import com.melancholiclabs.eleganterowid.R;
 
 import java.util.ArrayList;
 
+import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -66,17 +68,17 @@ public class IndexFragment extends Fragment {
                              Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.fragment_index_list, container, false);
 
-        if (myView instanceof RecyclerView) {
-            Context context = myView.getContext();
-            RecyclerView recyclerView = (RecyclerView) myView;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        Context context = myView.getContext();
+        RecyclerView recyclerView = (RecyclerView) myView.findViewById(R.id.list);
+        VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) myView.findViewById(R.id.fast_scroller);
+        fastScroller.setRecyclerView(recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-            FetchIndexTypeTask fetchIndexTypeTask = new FetchIndexTypeTask();
-            fetchIndexTypeTask.execute();
+        FetchIndexTypeTask fetchIndexTypeTask = new FetchIndexTypeTask();
+        fetchIndexTypeTask.execute();
 
-            indexRecyclerViewAdapter = new IndexRecyclerViewAdapter(index, mListener);
-            recyclerView.setAdapter(indexRecyclerViewAdapter);
-        }
+        indexRecyclerViewAdapter = new IndexRecyclerViewAdapter(index, mListener);
+        recyclerView.setAdapter(indexRecyclerViewAdapter);
 
         return myView;
     }
