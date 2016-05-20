@@ -1,26 +1,16 @@
 package com.melancholiclabs.eleganterowid.pages;
 
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.melancholiclabs.eleganterowid.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,41 +25,41 @@ import java.net.URL;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MainFragment#newInstance} factory method to
+ * Use the {@link EffectsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment {
+public class EffectsFragment extends Fragment {
 
-    private static final String ARG_URL = "url";
-    private static final String ARG_INDEX_TYPE = "indexType";
-    private static String imageURL;
-    private static String effectsClassification;
-    private static String botanicalClassification;
-    private static String chemicalName;
-    private static String commonNames;
-    private static String uses;
-    private static String description;
-    private String mURL;
-    private String mIndexType;
-    private FetchSubstanceTask fetchSubstanceTask = new FetchSubstanceTask();
+    private static final String URL_PREFIX = "http://104.131.56.118/erowid/api.php/effectsIndex?filter=id,eq,";
+    private static final String URL_SUFFIX = "&columns=duration,positiveEffects,neutralEffects,negativeEffects,description,experienceReports,cautionDisclaimer&transform=1";
 
-    public MainFragment() {
+    private static final String ARG_ID = "id";
+
+    private String mID;
+
+    private String positiveEffects;
+    private String neutralEffects;
+    private String negativeEffects;
+    private String description;
+    private String disclaimer;
+
+    private FetchEffectsTask fetchEffectsTask = new FetchEffectsTask();
+
+    public EffectsFragment() {
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param url       substanceURL.
-     * @param indexType substance index type.
-     * @return A new instance of fragment MainFragment.
+     * @param id substance id.
+     * @return A new instance of fragment EffectsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MainFragment newInstance(String url, String indexType) {
-        MainFragment fragment = new MainFragment();
+    public static EffectsFragment newInstance(String id) {
+        EffectsFragment fragment = new EffectsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_URL, url);
-        args.putString(ARG_INDEX_TYPE, indexType);
+        args.putString(ARG_ID, id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,36 +68,32 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mURL = getArguments().getString("url");
-            mIndexType = getArguments().getString("indexType");
+            mID = getArguments().getString(ARG_ID);
         }
-        fetchSubstanceTask.execute();
+        fetchEffectsTask.execute();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_effects, container, false);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        if (fetchSubstanceTask != null && fetchSubstanceTask.getStatus() == AsyncTask.Status.RUNNING) {
-            fetchSubstanceTask.cancel(true);
-        }
-
-        if (fetchSubstanceTask != null && fetchSubstanceTask.getStatus() == AsyncTask.Status.RUNNING) {
-            fetchSubstanceTask.cancel(true);
+        if (fetchEffectsTask != null && fetchEffectsTask.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchEffectsTask.cancel(true);
         }
     }
 
-    public class FetchSubstanceTask extends AsyncTask<Void, Void, Void> {
+    public class FetchEffectsTask extends AsyncTask<Void, Void, Void> {
         /**
          * Take the String representing the complete forecast in JSON Format and
          * pull out the data we need to construct the Strings needed for the wireframes.
-         * <p>
+         * <p/>
          * Fortunately parsing is easy:  constructor takes the JSON string and converts it
          * into an Object hierarchy for us.
          */
@@ -116,46 +102,16 @@ public class MainFragment extends Fragment {
 
             // These are the names of the JSON objects that need to be extracted.
             JSONObject forecastJson = new JSONObject(substanceJsonStr);
-            JSONArray substanceArray = forecastJson.getJSONArray(mIndexType);
+            JSONArray substanceArray = forecastJson.getJSONArray("effectsIndex");
 
             // Get the JSON object representing the day
             JSONObject substance = substanceArray.getJSONObject(0);
 
-            try {
-                imageURL = substance.getString("imageURL");
-            } catch (JSONException e) {
-                // Do nothing
-            }
-            try {
-                effectsClassification = substance.getString("effectsClassification");
-            } catch (JSONException e) {
-                // Do nothing
-            }
-            try {
-                botanicalClassification = substance.getString("botanicalClassification");
-            } catch (JSONException e) {
-                // Do nothing
-            }
-            try {
-                chemicalName = substance.getString("chemicalName");
-            } catch (JSONException e) {
-                // Do nothing
-            }
-            try {
-                commonNames = substance.getString("commonNames");
-            } catch (JSONException e) {
-                // Do nothing
-            }
-            try {
-                uses = substance.getString("uses");
-            } catch (JSONException e) {
-                // Do nothing
-            }
-            try {
-                description = substance.getString("description");
-            } catch (JSONException e) {
-                // Do nothing
-            }
+            positiveEffects = substance.getString("positiveEffects");
+            neutralEffects = substance.getString("neutralEffects");
+            negativeEffects = substance.getString("negativeEffects");
+            description = substance.getString("description");
+            disclaimer = substance.getString("cautionDisclaimer");
         }
 
         @Override
@@ -170,7 +126,7 @@ public class MainFragment extends Fragment {
 
             try {
 
-                URL url = new URL(mURL);
+                URL url = new URL(URL_PREFIX + mID + URL_SUFFIX);
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -230,90 +186,47 @@ public class MainFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             View rootView = getView();
 
-            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.main_linear_layout);
+            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.effects_linear_layout);
 
-            if (imageURL != null && !imageURL.equals("null")) {
-                final ImageView imageView = (ImageView) rootView.findViewById(R.id.substance_image);
-
-                ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-                layoutParams.height = (rootView.getWidth() * 2) / 3;
-
-                ImageLoader imageLoader = ImageLoader.getInstance();
-                imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
-                imageLoader.loadImage(imageURL, new SimpleImageLoadingListener() {
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        // Transition drawable with a transparent drwabale and the final bitmap
-                        final TransitionDrawable td =
-                                new TransitionDrawable(new Drawable[]{
-                                        new ColorDrawable(Color.TRANSPARENT),
-                                        new BitmapDrawable(loadedImage)
-                                });
-                        // Set background to loading bitmap
-                        // substanceImageView.setBackgroundDrawable(
-                        //        new BitmapDrawable(mResources, mLoadingBitmap));
-
-                        imageView.setImageDrawable(td);
-                        td.startTransition(250);
-                        super.onLoadingComplete(imageUri, view, loadedImage);
-                    }
-                });
-                imageView.setLayoutParams(layoutParams);
-                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                imageView.setVisibility(View.VISIBLE);
-            }
-
-            if (effectsClassification != null && !effectsClassification.equals("null")) {
+            if (!positiveEffects.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Effects Classification");
+                titleTextView.setText("Positive Effects");
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(effectsClassification);
+                paragraphTextView.setText(positiveEffects);
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
                 linearLayout.addView(paragraphTextView);
             }
 
-            if (botanicalClassification != null && !botanicalClassification.equals("null")) {
+            if (!neutralEffects.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Botanical Classification");
+                titleTextView.setText("Neutral Effects");
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(botanicalClassification);
+                paragraphTextView.setText(neutralEffects);
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
                 linearLayout.addView(paragraphTextView);
             }
 
-            if (chemicalName != null && !chemicalName.equals("null")) {
+            if (!negativeEffects.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Chemical Name");
+                titleTextView.setText("Negative Effects");
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(chemicalName);
+                paragraphTextView.setText(negativeEffects);
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
                 linearLayout.addView(paragraphTextView);
             }
 
-            if (commonNames != null && !commonNames.equals("null")) {
+            if (!description.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Common Names");
-
-                TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(commonNames);
-                paragraphTextView.setPadding(10, 0, 0, 10);
-
-                linearLayout.addView(titleTextView);
-                linearLayout.addView(paragraphTextView);
-            }
-
-            if (description != null && !description.equals("null")) {
-                TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Description");
+                titleTextView.setText("Effects");
 
                 TextView paragraphTextView = new TextView(getContext());
                 paragraphTextView.setText(description);
@@ -323,12 +236,12 @@ public class MainFragment extends Fragment {
                 linearLayout.addView(paragraphTextView);
             }
 
-            if (uses != null && !uses.equals("null")) {
+            if (!disclaimer.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Uses");
+                titleTextView.setText("Problems");
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(uses);
+                paragraphTextView.setText(disclaimer);
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);

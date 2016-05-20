@@ -18,6 +18,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.melancholiclabs.eleganterowid.R;
+import com.melancholiclabs.eleganterowid.pages.BasicsFragment;
+import com.melancholiclabs.eleganterowid.pages.EffectsFragment;
+import com.melancholiclabs.eleganterowid.pages.HealthFragment;
+import com.melancholiclabs.eleganterowid.pages.ImagesFragment;
 import com.melancholiclabs.eleganterowid.pages.MainFragment;
 
 import org.json.JSONArray;
@@ -205,6 +209,14 @@ public class SubstanceActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     return MainFragment.newInstance(URL_PREFIX + mIndexType + URL_MIDDLE + mId + URL_SUFFIX, mIndexType);
+                case 1:
+                    return BasicsFragment.newInstance(mId);
+                case 2:
+                    return EffectsFragment.newInstance(mId);
+                case 3:
+                    return ImagesFragment.newInstance(mId);
+                case 4:
+                    return HealthFragment.newInstance(mId);
             }
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
