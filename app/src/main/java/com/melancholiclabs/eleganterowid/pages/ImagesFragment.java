@@ -4,6 +4,9 @@ package com.melancholiclabs.eleganterowid.pages;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -185,7 +191,21 @@ public class ImagesFragment extends Fragment {
                 titleTextView.setText("Image Entry List");
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(imageEntryList);
+
+                ArrayList<String> matches = new ArrayList<>();
+                Pattern pattern = Pattern.compile("https(\\S*?)\\s");
+                Matcher matcher = pattern.matcher(imageEntryList);
+                while (matcher.find()) {
+                    matches.add(matcher.group());
+                }
+                String linkText = imageEntryList;
+                for (String match : matches) {
+                    linkText = linkText.replace(match, "<a href='" + match + "'>" + match + "</a>");
+                }
+
+                paragraphTextView.setText(Html.fromHtml(linkText));
+                Linkify.addLinks(paragraphTextView, Linkify.ALL);
+                paragraphTextView.setMovementMethod(LinkMovementMethod.getInstance());
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);

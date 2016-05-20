@@ -15,13 +15,15 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@android:drawable/sym_def_app_icon" />
+        android:layout_gravity="start"
+        android:src="@drawable/ic_nav_header" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
+        android:paddingTop="4dp"
+        android:shadowColor="@android:color/black"
+        android:shadowRadius="4"
         android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 

@@ -143,6 +143,7 @@ public class MainFragment extends Fragment {
             }
             try {
                 commonNames = substance.getString("commonNames");
+                commonNames = commonNames.replaceAll("; ", "\n");
             } catch (JSONException e) {
                 // Do nothing
             }

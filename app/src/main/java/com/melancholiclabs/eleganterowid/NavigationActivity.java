@@ -11,10 +11,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.melancholiclabs.eleganterowid.index.IndexFragment;
+import com.melancholiclabs.eleganterowid.settings.SettingsActivity;
 import com.melancholiclabs.eleganterowid.substance.SubstanceActivity;
 
 import org.json.JSONArray;
@@ -63,6 +63,7 @@ public class NavigationActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+        drawer.openDrawer(GravityCompat.START);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -76,13 +77,9 @@ public class NavigationActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.navigation, menu);
-        return true;
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            getSupportActionBar().setTitle(R.string.app_name);
+        }
     }
 
     @Override
@@ -118,6 +115,9 @@ public class NavigationActivity extends AppCompatActivity
             displayView(id);
         } else if (id == R.id.nav_animal_index) {
             displayView(id);
+        } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
