@@ -200,6 +200,7 @@ public class EffectsFragment extends Fragment {
                 while (scanner.hasNext()) {
                     builder.append("&#8226; " + scanner.next() + "<br/>");
                 }
+                builder.setLength(builder.length() - 1);
 
                 TextView paragraphTextView = new TextView(getContext());
                 paragraphTextView.setText(Html.fromHtml(builder.toString()));
@@ -219,9 +220,10 @@ public class EffectsFragment extends Fragment {
                 while (scanner.hasNext()) {
                     builder.append("&#8226; " + scanner.next() + "<br/>");
                 }
+                builder.setLength(builder.length() - 1);
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(Html.fromHtml(builder.toString()));
+                paragraphTextView.setText(Html.fromHtml(builder.toString().trim()));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
@@ -238,9 +240,10 @@ public class EffectsFragment extends Fragment {
                 while (scanner.hasNext()) {
                     builder.append("&#8226; " + scanner.next() + "<br/>");
                 }
+                builder.setLength(builder.length() - 1);
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(Html.fromHtml(builder.toString()));
+                paragraphTextView.setText(Html.fromHtml(builder.toString().trim()));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);

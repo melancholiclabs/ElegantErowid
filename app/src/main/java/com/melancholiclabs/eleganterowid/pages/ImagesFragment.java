@@ -200,7 +200,7 @@ public class ImagesFragment extends Fragment {
                 }
                 String linkText = imageEntryList;
                 for (String match : matches) {
-                    linkText = linkText.replace(match, "<a href='" + match + "'>" + match + "</a>\n");
+                    linkText = linkText.replace(match, "<br/><a href='" + match + "'>" + match + "</a><br/>");
                 }
 
                 Scanner scanner = new Scanner(linkText);
