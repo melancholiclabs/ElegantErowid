@@ -1,6 +1,8 @@
 package com.melancholiclabs.eleganterowid.substance;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -46,11 +48,13 @@ public class SubstanceActivity extends AppCompatActivity {
     private static final String ARG_NAME = "name";
     private static final String ARG_CATEGORY = "category";
     private static final String ARG_PAGES = "pages";
+    private static final String ARG_URL = "url";
 
     private static String mId;
     private static String mName;
     private static String mCategory;
     private static String[] mPages;
+    private static String mURL;
     private static String mIndexType;
 
     private static String imageURL;
@@ -92,6 +96,7 @@ public class SubstanceActivity extends AppCompatActivity {
         mName = b.getString(ARG_NAME);
         mCategory = b.getString(ARG_CATEGORY);
         mPages = b.getStringArray(ARG_PAGES);
+        mURL = b.getString(ARG_URL);
 
         for (String url : mPages) {
             if (url.contains("basics")) pageTitles.add("BASICS");
@@ -151,7 +156,9 @@ public class SubstanceActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_open_in_browser) {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mURL));
+            startActivity(browserIntent);
             return true;
         }
 

@@ -80,6 +80,10 @@
         <item>-1</item>
     </string-array>
 
+    <string name="open_in_browser">Open In Browser</string>
+
+    <string name="about">About</string>
+
     <string name="pref_title_system_sync_settings">System sync settings</string>
 
     <!-- Example settings for Notifications -->

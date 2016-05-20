@@ -281,7 +281,7 @@ public class MainFragment extends Fragment {
                 titleTextView.setText("Botanical Classification");
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(botanicalClassification);
+                paragraphTextView.setText(botanicalClassification.replaceAll(", ", "\n"));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);

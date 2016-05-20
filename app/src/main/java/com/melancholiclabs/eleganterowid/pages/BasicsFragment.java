@@ -4,6 +4,7 @@ package com.melancholiclabs.eleganterowid.pages;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -189,8 +190,10 @@ public class BasicsFragment extends Fragment {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("Description");
 
+                String temp = description.replaceAll("\n", "<br/><br/>");
+
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(description);
+                paragraphTextView.setText(Html.fromHtml(temp));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
@@ -201,8 +204,10 @@ public class BasicsFragment extends Fragment {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("Effects");
 
+                String temp = description.replaceAll("\n", "<br/><br/>");
+
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(effects);
+                paragraphTextView.setText(Html.fromHtml(temp));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
@@ -213,8 +218,10 @@ public class BasicsFragment extends Fragment {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("Problems");
 
+                String temp = description.replaceAll("\n", "<br/><br/>");
+
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(problems);
+                paragraphTextView.setText(Html.fromHtml(temp));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);

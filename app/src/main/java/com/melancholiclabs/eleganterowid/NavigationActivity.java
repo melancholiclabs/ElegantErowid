@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.melancholiclabs.eleganterowid.index.IndexFragment;
-import com.melancholiclabs.eleganterowid.settings.SettingsActivity;
 import com.melancholiclabs.eleganterowid.substance.SubstanceActivity;
 
 import org.json.JSONArray;
@@ -32,12 +31,12 @@ import java.util.ArrayList;
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IndexFragment.OnFragmentInteractionListener {
 
-    public static final String CHEM_URL = "http://104.131.56.118/erowid/api.php/chemIndex?columns=id,name,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL,researchChemicalsURL&transform=1";
-    public static final String PLANT_URL = "http://104.131.56.118/erowid/api.php/plantIndex?columns=id,name,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
-    public static final String HERB_URL = "http://104.131.56.118/erowid/api.php/herbIndex?columns=id,name,commonNames,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
-    public static final String PHARM_URL = "http://104.131.56.118/erowid/api.php/pharmIndex?columns=id,name,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
-    public static final String SMART_URL = "http://104.131.56.118/erowid/api.php/smartIndex?columns=id,name,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
-    public static final String ANIMAL_URL = "http://104.131.56.118/erowid/api.php/animalIndex?columns=id,name,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
+    public static final String CHEM_URL = "http://104.131.56.118/erowid/api.php/chemIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL,researchChemicalsURL&transform=1";
+    public static final String PLANT_URL = "http://104.131.56.118/erowid/api.php/plantIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
+    public static final String HERB_URL = "http://104.131.56.118/erowid/api.php/herbIndex?columns=id,name,url,commonNames,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
+    public static final String PHARM_URL = "http://104.131.56.118/erowid/api.php/pharmIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
+    public static final String SMART_URL = "http://104.131.56.118/erowid/api.php/smartIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
+    public static final String ANIMAL_URL = "http://104.131.56.118/erowid/api.php/animalIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
 
     public static ArrayList<IndexItem> mainIndex = new ArrayList<>();
 
@@ -82,21 +81,6 @@ public class NavigationActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -115,9 +99,8 @@ public class NavigationActivity extends AppCompatActivity
             displayView(id);
         } else if (id == R.id.nav_animal_index) {
             displayView(id);
-        } else if (id == R.id.nav_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
+        } else if (id == R.id.nav_about) {
+            displayView(id);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -156,6 +139,10 @@ public class NavigationActivity extends AppCompatActivity
                 fragment = new IndexFragment().newInstance("Animals");
                 title = "Animals";
                 break;
+            case R.id.nav_about:
+                fragment = new AboutFragment().newInstance();
+                title = "About";
+                break;
         }
 
         // Transitions to the new fragment while replacing the fragment_container
@@ -187,6 +174,7 @@ public class NavigationActivity extends AppCompatActivity
         b.putString("name", item.name);
         b.putString("category", item.category);
         b.putStringArray("pages", item.pages);
+        b.putString("url", item.url);
         intent.putExtras(b);
         startActivity(intent);
     }
@@ -210,13 +198,15 @@ public class NavigationActivity extends AppCompatActivity
         public String caption;
         public String category;
         public String[] pages;
+        public String url;
 
-        public IndexItem(String id, String name, String caption, String category, String[] pages) {
+        public IndexItem(String id, String name, String caption, String category, String[] pages, String url) {
             this.id = id;
             this.name = name;
             this.caption = caption;
             this.category = category;
             this.pages = pages;
+            this.url = url;
         }
 
         @Override
@@ -247,6 +237,7 @@ public class NavigationActivity extends AppCompatActivity
                 String substanceCaption;
                 String substanceCategory;
                 String[] substancePages = new String[8];
+                String substanceURL;
 
                 // Get the JSON object representing the day
                 JSONObject substance = substanceArray.getJSONObject(i);
@@ -272,8 +263,10 @@ public class NavigationActivity extends AppCompatActivity
                 } else {
                     substancePages[7] = "null";
                 }
+                substanceURL = substance.getString("url");
 
-                IndexItem indexItem = new IndexItem(substanceID, substanceName, substanceCaption, substanceCategory, substancePages);
+
+                IndexItem indexItem = new IndexItem(substanceID, substanceName, substanceCaption, substanceCategory, substancePages, substanceURL);
 
                 if (!mainIndex.contains(indexItem)) {
                     mainIndex.add(indexItem);
