@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -189,8 +190,7 @@ public class ImagesFragment extends Fragment {
             if (!imageEntryList.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("Image Entry List");
-
-                TextView paragraphTextView = new TextView(getContext());
+                linearLayout.addView(titleTextView);
 
                 ArrayList<String> matches = new ArrayList<>();
                 Pattern pattern = Pattern.compile("https(\\S*?)\\s");
@@ -200,16 +200,18 @@ public class ImagesFragment extends Fragment {
                 }
                 String linkText = imageEntryList;
                 for (String match : matches) {
-                    linkText = linkText.replace(match, "<a href='" + match + "'>" + match + "</a>");
+                    linkText = linkText.replace(match, "<a href='" + match + "'>" + match + "</a>\n");
                 }
 
-                paragraphTextView.setText(Html.fromHtml(linkText));
-                Linkify.addLinks(paragraphTextView, Linkify.ALL);
-                paragraphTextView.setMovementMethod(LinkMovementMethod.getInstance());
-                paragraphTextView.setPadding(10, 0, 0, 10);
-
-                linearLayout.addView(titleTextView);
-                linearLayout.addView(paragraphTextView);
+                Scanner scanner = new Scanner(linkText);
+                while (scanner.hasNextLine()) {
+                    TextView textView = new TextView(getContext());
+                    textView.setText(Html.fromHtml(scanner.nextLine()));
+                    Linkify.addLinks(textView, Linkify.ALL);
+                    textView.setMovementMethod(LinkMovementMethod.getInstance());
+                    textView.setPadding(10, 0, 0, 10);
+                    linearLayout.addView(textView);
+                }
             }
 
             rootView.invalidate();
