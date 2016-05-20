@@ -1,5 +1,6 @@
 package com.melancholiclabs.eleganterowid;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -14,7 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.melancholiclabs.eleganterowid.index.IndexFragment;
-import com.melancholiclabs.eleganterowid.substance.SubstanceFragment;
+import com.melancholiclabs.eleganterowid.substance.SubstanceActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,14 +32,16 @@ import java.util.ArrayList;
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IndexFragment.OnFragmentInteractionListener {
 
-    public static final String CHEM_URL = "http://104.131.56.118/erowid/api.php/chemIndex?columns=id,name,effectsClassification,category&transform=1";
-    public static final String PLANT_URL = "http://104.131.56.118/erowid/api.php/plantIndex?columns=id,name,effectsClassification,category&transform=1";
-    public static final String HERB_URL = "http://104.131.56.118/erowid/api.php/herbIndex?columns=id,name,commonNames,category&transform=1";
-    public static final String PHARM_URL = "http://104.131.56.118/erowid/api.php/pharmIndex?columns=id,name,effectsClassification,category&transform=1";
-    public static final String SMART_URL = "http://104.131.56.118/erowid/api.php/smartIndex?columns=id,name,effectsClassification,category&transform=1";
-    public static final String ANIMAL_URL = "http://104.131.56.118/erowid/api.php/animalIndex?columns=id,name,effectsClassification,category&transform=1";
+    public static final String CHEM_URL = "http://104.131.56.118/erowid/api.php/chemIndex?columns=id,name,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL,researchChemicalsURL&transform=1";
+    public static final String PLANT_URL = "http://104.131.56.118/erowid/api.php/plantIndex?columns=id,name,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
+    public static final String HERB_URL = "http://104.131.56.118/erowid/api.php/herbIndex?columns=id,name,commonNames,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
+    public static final String PHARM_URL = "http://104.131.56.118/erowid/api.php/pharmIndex?columns=id,name,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
+    public static final String SMART_URL = "http://104.131.56.118/erowid/api.php/smartIndex?columns=id,name,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
+    public static final String ANIMAL_URL = "http://104.131.56.118/erowid/api.php/animalIndex?columns=id,name,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
 
     public static ArrayList<IndexItem> mainIndex = new ArrayList<>();
+
+    private FetchMainIndexTask fetchMainIndexTask = new FetchMainIndexTask();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +50,6 @@ public class NavigationActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FetchMainIndexTask fetchMainIndexTask = new FetchMainIndexTask();
         fetchMainIndexTask.execute();
 
         HomeFragment homeFragment = HomeFragment.newInstance();
@@ -179,14 +181,27 @@ public class NavigationActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(IndexItem item) {
-        Fragment fragment = SubstanceFragment.newInstance(item.id, item.name, item.category);
+        Intent intent = new Intent(this, SubstanceActivity.class);
+        Bundle b = new Bundle();
+        b.putString("id", item.id);
+        b.putString("name", item.name);
+        b.putString("category", item.category);
+        b.putStringArray("pages", item.pages);
+        intent.putExtras(b);
+        startActivity(intent);
+    }
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, fragment);
-        ft.addToBackStack("substance");
-        ft.commit();
+    @Override
+    public void onStop() {
+        super.onStop();
 
-        getSupportActionBar().setTitle(item.name);
+        if (fetchMainIndexTask != null && fetchMainIndexTask.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchMainIndexTask.cancel(true);
+        }
+
+        if (fetchMainIndexTask != null && fetchMainIndexTask.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchMainIndexTask.cancel(true);
+        }
     }
 
     public class IndexItem {
@@ -194,12 +209,14 @@ public class NavigationActivity extends AppCompatActivity
         public String name;
         public String caption;
         public String category;
+        public String[] pages;
 
-        public IndexItem(String id, String name, String caption, String category) {
+        public IndexItem(String id, String name, String caption, String category, String[] pages) {
             this.id = id;
             this.name = name;
             this.caption = caption;
             this.category = category;
+            this.pages = pages;
         }
 
         @Override
@@ -229,6 +246,7 @@ public class NavigationActivity extends AppCompatActivity
                 String substanceName;
                 String substanceCaption;
                 String substanceCategory;
+                String[] substancePages = new String[8];
 
                 // Get the JSON object representing the day
                 JSONObject substance = substanceArray.getJSONObject(i);
@@ -242,7 +260,20 @@ public class NavigationActivity extends AppCompatActivity
                 }
                 substanceCategory = substance.getString("category");
 
-                IndexItem indexItem = new IndexItem(substanceID, substanceName, substanceCaption, substanceCategory);
+                substancePages[0] = substance.getString("basicsURL");
+                substancePages[1] = substance.getString("effectsURL");
+                substancePages[2] = substance.getString("imagesURL");
+                substancePages[3] = substance.getString("healthURL");
+                substancePages[4] = substance.getString("lawURL");
+                substancePages[5] = substance.getString("doseURL");
+                substancePages[6] = substance.getString("chemistryURL");
+                if (substanceCategory.equals("Chemicals")) {
+                    substancePages[7] = substance.getString("researchChemicalsURL");
+                } else {
+                    substancePages[7] = "null";
+                }
+
+                IndexItem indexItem = new IndexItem(substanceID, substanceName, substanceCaption, substanceCategory, substancePages);
 
                 if (!mainIndex.contains(indexItem)) {
                     mainIndex.add(indexItem);
