@@ -25,27 +25,27 @@ import java.net.URL;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HealthFragment#newInstance} factory method to
+ * Use the {@link LawFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HealthFragment extends Fragment {
+public class LawFragment extends Fragment {
 
-    private static final String URL_PREFIX = "http://104.131.56.118/erowid/api.php/healthIndex?filter=id,eq,";
-    private static final String URL_SUFFIX = "&columns=notes,deaths,warnings,cautions,benefits&transform=1";
+    private static final String URL_PREFIX = "http://104.131.56.118/erowid/api.php/lawIndex?filter=id,eq,";
+    private static final String URL_SUFFIX = "&columns=legalTable,federalLawText,stateLaw,internationalLaw,cautionDisclaimer&transform=1";
 
     private static final String ARG_ID = "id";
 
     private String mID;
 
-    private String notes;
-    private String deaths;
-    private String warnings;
-    private String cautions;
-    private String benefits;
+    private String legalTable;
+    private String federalLawText;
+    private String stateLaw;
+    private String internationalLaw;
+    private String disclaimer;
 
-    private FetchHealthTask fetchHealthTask = new FetchHealthTask();
+    private FetchLawTask fetchLawTask = new FetchLawTask();
 
-    public HealthFragment() {
+    public LawFragment() {
     }
 
     /**
@@ -53,11 +53,11 @@ public class HealthFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param id substance id.
-     * @return A new instance of fragment HealthFragment.
+     * @return A new instance of fragment LawFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HealthFragment newInstance(String id) {
-        HealthFragment fragment = new HealthFragment();
+    public static LawFragment newInstance(String id) {
+        LawFragment fragment = new LawFragment();
         Bundle args = new Bundle();
         args.putString(ARG_ID, id);
         fragment.setArguments(args);
@@ -70,26 +70,26 @@ public class HealthFragment extends Fragment {
         if (getArguments() != null) {
             mID = getArguments().getString(ARG_ID);
         }
-        fetchHealthTask.execute();
+        fetchLawTask.execute();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_health, container, false);
+        return inflater.inflate(R.layout.fragment_law, container, false);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        if (fetchHealthTask != null && fetchHealthTask.getStatus() == AsyncTask.Status.RUNNING) {
-            fetchHealthTask.cancel(true);
+        if (fetchLawTask != null && fetchLawTask.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchLawTask.cancel(true);
         }
     }
 
-    public class FetchHealthTask extends AsyncTask<Void, Void, Void> {
+    public class FetchLawTask extends AsyncTask<Void, Void, Void> {
         /**
          * Take the String representing the complete forecast in JSON Format and
          * pull out the data we need to construct the Strings needed for the wireframes.
@@ -102,16 +102,16 @@ public class HealthFragment extends Fragment {
 
             // These are the names of the JSON objects that need to be extracted.
             JSONObject forecastJson = new JSONObject(substanceJsonStr);
-            JSONArray substanceArray = forecastJson.getJSONArray("healthIndex");
+            JSONArray substanceArray = forecastJson.getJSONArray("lawIndex");
 
             // Get the JSON object representing the day
             JSONObject substance = substanceArray.getJSONObject(0);
 
-            notes = substance.getString("notes");
-            deaths = substance.getString("deaths");
-            warnings = substance.getString("warnings");
-            cautions = substance.getString("cautions");
-            benefits = substance.getString("benefits");
+            legalTable = substance.getString("legalTable");
+            federalLawText = substance.getString("federalLawText");
+            stateLaw = substance.getString("stateLaw");
+            internationalLaw = substance.getString("internationalLaw");
+            disclaimer = substance.getString("cautionDisclaimer");
         }
 
         @Override
@@ -186,62 +186,62 @@ public class HealthFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             View rootView = getView();
 
-            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.health_linear_layout);
+            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.law_linear_layout);
 
-            if (!notes.equals("null")) {
+            if (!legalTable.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Notes");
+                titleTextView.setText("Legal Table");
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(notes);
+                paragraphTextView.setText(legalTable);
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
                 linearLayout.addView(paragraphTextView);
             }
 
-            if (!deaths.equals("null")) {
+            if (!federalLawText.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Deaths");
+                titleTextView.setText("Federal Law");
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(deaths);
+                paragraphTextView.setText(federalLawText);
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
                 linearLayout.addView(paragraphTextView);
             }
 
-            if (!warnings.equals("null")) {
+            if (!stateLaw.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Warnings");
+                titleTextView.setText("State Law");
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(warnings);
+                paragraphTextView.setText(stateLaw);
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
                 linearLayout.addView(paragraphTextView);
             }
 
-            if (!cautions.equals("null")) {
+            if (!internationalLaw.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Cautions");
+                titleTextView.setText("International Law");
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(cautions);
+                paragraphTextView.setText(internationalLaw);
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
                 linearLayout.addView(paragraphTextView);
             }
 
-            if (!benefits.equals("null")) {
+            if (!disclaimer.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Benefits");
+                titleTextView.setText("Disclaimer");
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(benefits);
+                paragraphTextView.setText(disclaimer);
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
