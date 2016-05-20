@@ -4,6 +4,7 @@ package com.melancholiclabs.eleganterowid.pages;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Scanner;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -194,6 +196,7 @@ public class LawFragment extends Fragment {
 
                 TextView paragraphTextView = new TextView(getContext());
                 paragraphTextView.setText(legalTable);
+                paragraphTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
@@ -204,8 +207,10 @@ public class LawFragment extends Fragment {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("Federal Law");
 
+                String temp = federalLawText.replaceAll("\n", "<br/><br/>");
+
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(federalLawText);
+                paragraphTextView.setText(Html.fromHtml(temp));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
@@ -216,8 +221,25 @@ public class LawFragment extends Fragment {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("State Law");
 
+                StringBuilder builder = new StringBuilder();
+
+                Scanner scanner = new Scanner(stateLaw);
+                scanner.useDelimiter("\t");
+                while (scanner.hasNextLine()) {
+                    Scanner line = new Scanner(scanner.nextLine());
+                    builder.append("<strong>");
+                    builder.append(line.next());
+                    builder.append("</strong> ");
+                    while (line.hasNext()) {
+                        builder.append(line.next());
+                        builder.append(" ");
+                    }
+                    builder.append("<br/><br/>");
+                }
+                builder.setLength(builder.length() - 6);
+
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(stateLaw);
+                paragraphTextView.setText(Html.fromHtml(builder.toString()));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
@@ -228,8 +250,25 @@ public class LawFragment extends Fragment {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("International Law");
 
+                StringBuilder builder = new StringBuilder();
+
+                Scanner scanner = new Scanner(internationalLaw);
+                scanner.useDelimiter("\t");
+                while (scanner.hasNextLine()) {
+                    Scanner line = new Scanner(scanner.nextLine());
+                    builder.append("<strong>");
+                    builder.append(line.next());
+                    builder.append("</strong> ");
+                    while (line.hasNext()) {
+                        builder.append(line.next());
+                        builder.append(" ");
+                    }
+                    builder.append("<br/><br/>");
+                }
+                builder.setLength(builder.length() - 6);
+
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(internationalLaw);
+                paragraphTextView.setText(Html.fromHtml(builder.toString()));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);

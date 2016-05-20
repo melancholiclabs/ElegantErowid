@@ -10,6 +10,7 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -221,8 +222,10 @@ public class ResearchChemicalFragment extends Fragment {
                 titleTextView.setTextColor(Color.WHITE);
                 titleTextView.setShadowLayer(6, 2, 2, Color.BLACK);
 
+                String temp = summaryText.replaceAll("\n", "<br/><br/>");
+
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(summaryText);
+                paragraphTextView.setText(Html.fromHtml(temp));
                 paragraphTextView.setPadding(10, 0, 0, 10);
                 paragraphTextView.setTextColor(Color.WHITE);
                 paragraphTextView.setShadowLayer(6, 2, 2, Color.BLACK);

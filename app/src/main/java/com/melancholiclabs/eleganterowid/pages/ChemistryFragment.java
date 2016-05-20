@@ -198,6 +198,7 @@ public class ChemistryFragment extends Fragment {
 
                 TextView paragraphTextView = new TextView(getContext());
                 paragraphTextView.setText(chemTable);
+                paragraphTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);

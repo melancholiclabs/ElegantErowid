@@ -4,6 +4,7 @@ package com.melancholiclabs.eleganterowid.pages;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -192,6 +193,7 @@ public class DoseFragment extends Fragment {
 
                 TextView paragraphTextView = new TextView(getContext());
                 paragraphTextView.setText(doseTable);
+                paragraphTextView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
@@ -202,8 +204,10 @@ public class DoseFragment extends Fragment {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("Dosing");
 
+                String temp = doseText.replaceAll("\n", "<br/><br/>");
+
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(doseText);
+                paragraphTextView.setText(Html.fromHtml(temp));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
@@ -214,8 +218,10 @@ public class DoseFragment extends Fragment {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("Notes");
 
+                String temp = notes.replaceAll("\n", "<br/><br/>");
+
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(notes);
+                paragraphTextView.setText(Html.fromHtml(temp));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);

@@ -252,10 +252,12 @@ public class EffectsFragment extends Fragment {
 
             if (!description.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Effects");
+                titleTextView.setText("Description");
+
+                String temp = description.replaceAll("\n", "<br/><br/>");
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(description);
+                paragraphTextView.setText(Html.fromHtml(temp));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
@@ -264,7 +266,7 @@ public class EffectsFragment extends Fragment {
 
             if (!disclaimer.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Problems");
+                titleTextView.setText("Disclaimer");
 
                 TextView paragraphTextView = new TextView(getContext());
                 paragraphTextView.setText(disclaimer);
