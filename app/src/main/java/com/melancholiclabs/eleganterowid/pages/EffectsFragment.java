@@ -4,6 +4,7 @@ package com.melancholiclabs.eleganterowid.pages;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Scanner;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -192,8 +194,15 @@ public class EffectsFragment extends Fragment {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("Positive Effects");
 
+                Scanner scanner = new Scanner(positiveEffects);
+                scanner.useDelimiter("\t");
+                StringBuilder builder = new StringBuilder();
+                while (scanner.hasNext()) {
+                    builder.append("&#8226; " + scanner.next() + "<br/>");
+                }
+
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(positiveEffects);
+                paragraphTextView.setText(Html.fromHtml(builder.toString()));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
@@ -204,8 +213,15 @@ public class EffectsFragment extends Fragment {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("Neutral Effects");
 
+                Scanner scanner = new Scanner(neutralEffects);
+                scanner.useDelimiter("\t");
+                StringBuilder builder = new StringBuilder();
+                while (scanner.hasNext()) {
+                    builder.append("&#8226; " + scanner.next() + "<br/>");
+                }
+
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(neutralEffects);
+                paragraphTextView.setText(Html.fromHtml(builder.toString()));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
@@ -216,8 +232,15 @@ public class EffectsFragment extends Fragment {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("Negative Effects");
 
+                Scanner scanner = new Scanner(negativeEffects);
+                scanner.useDelimiter("\t");
+                StringBuilder builder = new StringBuilder();
+                while (scanner.hasNext()) {
+                    builder.append("&#8226; " + scanner.next() + "<br/>");
+                }
+
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(negativeEffects);
+                paragraphTextView.setText(Html.fromHtml(builder.toString()));
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
