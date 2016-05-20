@@ -26,6 +26,7 @@ import com.melancholiclabs.eleganterowid.pages.HealthFragment;
 import com.melancholiclabs.eleganterowid.pages.ImagesFragment;
 import com.melancholiclabs.eleganterowid.pages.LawFragment;
 import com.melancholiclabs.eleganterowid.pages.MainFragment;
+import com.melancholiclabs.eleganterowid.pages.ResearchChemicalFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -226,6 +227,8 @@ public class SubstanceActivity extends AppCompatActivity {
                     return DoseFragment.newInstance(mId);
                 case 7:
                     return ChemistryFragment.newInstance(mId);
+                case 8:
+                    return ResearchChemicalFragment.newInstance(mId);
             }
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
