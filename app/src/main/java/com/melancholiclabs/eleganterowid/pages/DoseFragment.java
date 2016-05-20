@@ -25,27 +25,26 @@ import java.net.URL;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HealthFragment#newInstance} factory method to
+ * Use the {@link DoseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HealthFragment extends Fragment {
+public class DoseFragment extends Fragment {
 
-    private static final String URL_PREFIX = "http://104.131.56.118/erowid/api.php/healthIndex?filter=id,eq,";
-    private static final String URL_SUFFIX = "&columns=notes,deaths,warnings,cautions,benefits&transform=1";
+    private static final String URL_PREFIX = "http://104.131.56.118/erowid/api.php/doseIndex?filter=id,eq,";
+    private static final String URL_SUFFIX = "&columns=doseTable,doseText,notes,cautionDisclaimer&transform=1";
 
     private static final String ARG_ID = "id";
 
     private String mID;
 
+    private String doseTable;
+    private String doseText;
     private String notes;
-    private String deaths;
-    private String warnings;
-    private String cautions;
-    private String benefits;
+    private String disclaimer;
 
-    private FetchHealthTask fetchHealthTask = new FetchHealthTask();
+    private FetchDoseTask fetchDoseTask = new FetchDoseTask();
 
-    public HealthFragment() {
+    public DoseFragment() {
     }
 
     /**
@@ -53,11 +52,11 @@ public class HealthFragment extends Fragment {
      * this fragment using the provided parameters.
      *
      * @param id substance id.
-     * @return A new instance of fragment HealthFragment.
+     * @return A new instance of fragment DoseFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HealthFragment newInstance(String id) {
-        HealthFragment fragment = new HealthFragment();
+    public static DoseFragment newInstance(String id) {
+        DoseFragment fragment = new DoseFragment();
         Bundle args = new Bundle();
         args.putString(ARG_ID, id);
         fragment.setArguments(args);
@@ -70,26 +69,26 @@ public class HealthFragment extends Fragment {
         if (getArguments() != null) {
             mID = getArguments().getString(ARG_ID);
         }
-        fetchHealthTask.execute();
+        fetchDoseTask.execute();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_health, container, false);
+        return inflater.inflate(R.layout.fragment_dose, container, false);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        if (fetchHealthTask != null && fetchHealthTask.getStatus() == AsyncTask.Status.RUNNING) {
-            fetchHealthTask.cancel(true);
+        if (fetchDoseTask != null && fetchDoseTask.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchDoseTask.cancel(true);
         }
     }
 
-    public class FetchHealthTask extends AsyncTask<Void, Void, Void> {
+    public class FetchDoseTask extends AsyncTask<Void, Void, Void> {
         /**
          * Take the String representing the complete forecast in JSON Format and
          * pull out the data we need to construct the Strings needed for the wireframes.
@@ -102,16 +101,15 @@ public class HealthFragment extends Fragment {
 
             // These are the names of the JSON objects that need to be extracted.
             JSONObject forecastJson = new JSONObject(substanceJsonStr);
-            JSONArray substanceArray = forecastJson.getJSONArray("healthIndex");
+            JSONArray substanceArray = forecastJson.getJSONArray("doseIndex");
 
             // Get the JSON object representing the day
             JSONObject substance = substanceArray.getJSONObject(0);
 
+            doseTable = substance.getString("doseTable");
+            doseText = substance.getString("doseText");
             notes = substance.getString("notes");
-            deaths = substance.getString("deaths");
-            warnings = substance.getString("warnings");
-            cautions = substance.getString("cautions");
-            benefits = substance.getString("benefits");
+            disclaimer = substance.getString("cautionDisclaimer");
         }
 
         @Override
@@ -186,7 +184,31 @@ public class HealthFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             View rootView = getView();
 
-            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.health_linear_layout);
+            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.dose_linear_layout);
+
+            if (!doseTable.equals("null")) {
+                TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
+                titleTextView.setText("Dose Table");
+
+                TextView paragraphTextView = new TextView(getContext());
+                paragraphTextView.setText(doseTable);
+                paragraphTextView.setPadding(10, 0, 0, 10);
+
+                linearLayout.addView(titleTextView);
+                linearLayout.addView(paragraphTextView);
+            }
+
+            if (!doseText.equals("null")) {
+                TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
+                titleTextView.setText("Dosing");
+
+                TextView paragraphTextView = new TextView(getContext());
+                paragraphTextView.setText(doseText);
+                paragraphTextView.setPadding(10, 0, 0, 10);
+
+                linearLayout.addView(titleTextView);
+                linearLayout.addView(paragraphTextView);
+            }
 
             if (!notes.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
@@ -200,48 +222,12 @@ public class HealthFragment extends Fragment {
                 linearLayout.addView(paragraphTextView);
             }
 
-            if (!deaths.equals("null")) {
+            if (!disclaimer.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Deaths");
+                titleTextView.setText("Disclaimer");
 
                 TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(deaths);
-                paragraphTextView.setPadding(10, 0, 0, 10);
-
-                linearLayout.addView(titleTextView);
-                linearLayout.addView(paragraphTextView);
-            }
-
-            if (!warnings.equals("null")) {
-                TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Warnings");
-
-                TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(warnings);
-                paragraphTextView.setPadding(10, 0, 0, 10);
-
-                linearLayout.addView(titleTextView);
-                linearLayout.addView(paragraphTextView);
-            }
-
-            if (!cautions.equals("null")) {
-                TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Cautions");
-
-                TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(cautions);
-                paragraphTextView.setPadding(10, 0, 0, 10);
-
-                linearLayout.addView(titleTextView);
-                linearLayout.addView(paragraphTextView);
-            }
-
-            if (!benefits.equals("null")) {
-                TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Benefits");
-
-                TextView paragraphTextView = new TextView(getContext());
-                paragraphTextView.setText(benefits);
+                paragraphTextView.setText(disclaimer);
                 paragraphTextView.setPadding(10, 0, 0, 10);
 
                 linearLayout.addView(titleTextView);
@@ -253,5 +239,4 @@ public class HealthFragment extends Fragment {
             super.onPostExecute(aVoid);
         }
     }
-
 }

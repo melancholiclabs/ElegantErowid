@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.melancholiclabs.eleganterowid.R;
 import com.melancholiclabs.eleganterowid.pages.BasicsFragment;
+import com.melancholiclabs.eleganterowid.pages.DoseFragment;
 import com.melancholiclabs.eleganterowid.pages.EffectsFragment;
 import com.melancholiclabs.eleganterowid.pages.HealthFragment;
 import com.melancholiclabs.eleganterowid.pages.ImagesFragment;
@@ -220,6 +221,8 @@ public class SubstanceActivity extends AppCompatActivity {
                     return HealthFragment.newInstance(mId);
                 case 5:
                     return LawFragment.newInstance(mId);
+                case 6:
+                    return DoseFragment.newInstance(mId);
             }
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
