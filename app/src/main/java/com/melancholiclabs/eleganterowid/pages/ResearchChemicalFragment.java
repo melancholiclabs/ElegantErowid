@@ -193,7 +193,7 @@ public class ResearchChemicalFragment extends Fragment {
             LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.research_chemical_linear_layout);
 
             if (!imageURL.equals("null")) {
-                final ImageView imageView = new ImageView(getContext());
+                final ImageView imageView = (ImageView) rootView.findViewById(R.id.research_chemical_image);
 
                 ImageLoader imageLoader = ImageLoader.getInstance();
                 imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
@@ -213,16 +213,19 @@ public class ResearchChemicalFragment extends Fragment {
                 });
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 imageView.setVisibility(View.VISIBLE);
-                linearLayout.addView(imageView);
             }
 
             if (!summaryText.equals("null")) {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("Summary");
+                titleTextView.setTextColor(Color.WHITE);
+                titleTextView.setShadowLayer(6, 2, 2, Color.BLACK);
 
                 TextView paragraphTextView = new TextView(getContext());
                 paragraphTextView.setText(summaryText);
                 paragraphTextView.setPadding(10, 0, 0, 10);
+                paragraphTextView.setTextColor(Color.WHITE);
+                paragraphTextView.setShadowLayer(6, 2, 2, Color.BLACK);
 
                 linearLayout.addView(titleTextView);
                 linearLayout.addView(paragraphTextView);
