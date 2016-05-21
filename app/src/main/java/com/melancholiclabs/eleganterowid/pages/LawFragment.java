@@ -236,7 +236,9 @@ public class LawFragment extends Fragment {
                     }
                     builder.append("<br/><br/>");
                 }
-                builder.setLength(builder.length() - 6);
+                if (builder.length() > 6) {
+                    builder.setLength(builder.length() - 6);
+                }
 
                 TextView paragraphTextView = new TextView(getContext());
                 paragraphTextView.setText(Html.fromHtml(builder.toString()));
@@ -265,7 +267,9 @@ public class LawFragment extends Fragment {
                     }
                     builder.append("<br/><br/>");
                 }
-                builder.setLength(builder.length() - 6);
+                if (builder.length() > 6) {
+                    builder.setLength(builder.length() - 6);
+                }
 
                 TextView paragraphTextView = new TextView(getContext());
                 paragraphTextView.setText(Html.fromHtml(builder.toString()));

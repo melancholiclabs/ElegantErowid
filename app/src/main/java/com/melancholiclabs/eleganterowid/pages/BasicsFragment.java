@@ -204,7 +204,7 @@ public class BasicsFragment extends Fragment {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("Effects");
 
-                String temp = description.replaceAll("\n", "<br/><br/>");
+                String temp = effects.replaceAll("\n", "<br/><br/>");
 
                 TextView paragraphTextView = new TextView(getContext());
                 paragraphTextView.setText(Html.fromHtml(temp));
@@ -218,7 +218,7 @@ public class BasicsFragment extends Fragment {
                 TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
                 titleTextView.setText("Problems");
 
-                String temp = description.replaceAll("\n", "<br/><br/>");
+                String temp = problems.replaceAll("\n", "<br/><br/>");
 
                 TextView paragraphTextView = new TextView(getContext());
                 paragraphTextView.setText(Html.fromHtml(temp));
