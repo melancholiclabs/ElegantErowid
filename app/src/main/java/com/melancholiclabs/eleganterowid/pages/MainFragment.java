@@ -51,6 +51,7 @@ public class MainFragment extends Fragment {
     private static String description;
     private String mURL;
     private String mIndexType;
+
     private FetchSubstanceTask fetchSubstanceTask = new FetchSubstanceTask();
 
     public MainFragment() {

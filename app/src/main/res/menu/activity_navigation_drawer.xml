@@ -31,6 +31,16 @@
             android:title="@string/animals" />
     </group>
 
+    <group
+        android:id="@+id/menu_bottom"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_exp_vault"
+            android:icon="@drawable/lock"
+            android:title="@string/experience_vault" />
+    </group>
+
     <item
         android:id="@+id/nav_about"
         android:icon="@android:drawable/ic_dialog_alert"

@@ -30,11 +30,13 @@ public class IndexFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_CATEGORY = "category";
-    private static ArrayList<IndexItem> index = new ArrayList<>();
-    private static IndexRecyclerViewAdapter indexRecyclerViewAdapter;
+    public static ArrayList<IndexItem> index = new ArrayList<>();
+    public static IndexRecyclerViewAdapter indexRecyclerViewAdapter;
     // TODO: Rename and change types of parameters
     private String mCategory;
     private OnFragmentInteractionListener mListener;
+
+    private FetchIndexTypeTask fetchIndexTypeTask = new FetchIndexTypeTask();
 
     public IndexFragment() {
     }
@@ -61,6 +63,7 @@ public class IndexFragment extends Fragment {
         if (getArguments() != null) {
             mCategory = getArguments().getString(ARG_CATEGORY);
         }
+        fetchIndexTypeTask.execute();
     }
 
     @Override
@@ -74,11 +77,10 @@ public class IndexFragment extends Fragment {
         fastScroller.setRecyclerView(recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        FetchIndexTypeTask fetchIndexTypeTask = new FetchIndexTypeTask();
-        fetchIndexTypeTask.execute();
-
         indexRecyclerViewAdapter = new IndexRecyclerViewAdapter(index, mListener);
         recyclerView.setAdapter(indexRecyclerViewAdapter);
+
+        indexRecyclerViewAdapter.notifyDataSetChanged();
 
         return myView;
     }
@@ -98,6 +100,15 @@ public class IndexFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        if (fetchIndexTypeTask != null && fetchIndexTypeTask.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchIndexTypeTask.cancel(true);
+        }
     }
 
     /**

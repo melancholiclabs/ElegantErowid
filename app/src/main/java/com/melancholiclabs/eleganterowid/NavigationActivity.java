@@ -7,18 +7,26 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
+import com.melancholiclabs.eleganterowid.exp_vault.ExpVaultFragment;
 import com.melancholiclabs.eleganterowid.index.IndexFragment;
 import com.melancholiclabs.eleganterowid.substance.SubstanceActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,9 +35,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class NavigationActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, IndexFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, IndexFragment.OnFragmentInteractionListener, ExpVaultFragment.OnFragmentInteractionListener {
 
     public static final String CHEM_URL = "http://104.131.56.118/erowid/api.php/chemIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL,researchChemicalsURL&transform=1";
     public static final String PLANT_URL = "http://104.131.56.118/erowid/api.php/plantIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
@@ -38,8 +47,12 @@ public class NavigationActivity extends AppCompatActivity
     public static final String SMART_URL = "http://104.131.56.118/erowid/api.php/smartIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
     public static final String ANIMAL_URL = "http://104.131.56.118/erowid/api.php/animalIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
 
-    public static ArrayList<IndexItem> mainIndex = new ArrayList<>();
+    private static final String VAULT_URL = "http://www.erowid.org/experiences/exp_list.shtml";
 
+    public static ArrayList<IndexItem> mainIndex = new ArrayList<>();
+    public static ArrayList<Substance> vaultList = new ArrayList<>();
+
+    private FetchVaultListTask fetchVaultListTask = new FetchVaultListTask();
     private FetchMainIndexTask fetchMainIndexTask = new FetchMainIndexTask();
 
     @Override
@@ -50,6 +63,7 @@ public class NavigationActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         fetchMainIndexTask.execute();
+        fetchVaultListTask.execute();
 
         HomeFragment homeFragment = HomeFragment.newInstance();
 
@@ -81,6 +95,27 @@ public class NavigationActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.navigation, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        return true;
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -98,6 +133,8 @@ public class NavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_smart_index) {
             displayView(id);
         } else if (id == R.id.nav_animal_index) {
+            displayView(id);
+        } else if (id == R.id.nav_exp_vault) {
             displayView(id);
         } else if (id == R.id.nav_about) {
             displayView(id);
@@ -138,6 +175,10 @@ public class NavigationActivity extends AppCompatActivity
             case R.id.nav_animal_index:
                 fragment = new IndexFragment().newInstance("Animals");
                 title = "Animals";
+                break;
+            case R.id.nav_exp_vault:
+                fragment = new ExpVaultFragment().newInstance();
+                title = "Experience Vault Index";
                 break;
             case R.id.nav_about:
                 fragment = new AboutFragment().newInstance();
@@ -180,6 +221,11 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     @Override
+    public void onFragmentInteraction(Substance item) {
+        System.out.println(item.name);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
 
@@ -187,8 +233,8 @@ public class NavigationActivity extends AppCompatActivity
             fetchMainIndexTask.cancel(true);
         }
 
-        if (fetchMainIndexTask != null && fetchMainIndexTask.getStatus() == AsyncTask.Status.RUNNING) {
-            fetchMainIndexTask.cancel(true);
+        if (fetchVaultListTask != null && fetchVaultListTask.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchVaultListTask.cancel(true);
         }
     }
 
@@ -212,6 +258,23 @@ public class NavigationActivity extends AppCompatActivity
         @Override
         public String toString() {
             return id + ", " + name + ", " + caption + ", " + category;
+        }
+    }
+
+    public class Substance {
+        public String name;
+        public String caption;
+        public String url;
+
+        public Substance(String name, String caption, String url) {
+            this.name = name;
+            this.caption = caption;
+            this.url = url;
+        }
+
+        @Override
+        public String toString() {
+            return name + ", " + caption + ", " + url;
         }
     }
 
@@ -264,7 +327,6 @@ public class NavigationActivity extends AppCompatActivity
                     substancePages[7] = "null";
                 }
                 substanceURL = substance.getString("url");
-
 
                 IndexItem indexItem = new IndexItem(substanceID, substanceName, substanceCaption, substanceCategory, substancePages, substanceURL);
 
@@ -350,6 +412,47 @@ public class NavigationActivity extends AppCompatActivity
             loadIndex(SMART_URL, "smartIndex");
             loadIndex(ANIMAL_URL, "animalIndex");
             return null;
+        }
+    }
+
+    public class FetchVaultListTask extends AsyncTask<Void, Integer, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                Document doc = Jsoup.connect(VAULT_URL).get();
+                Element table = doc.select("table").get(2);
+                Elements rows = table.select("td");
+                for (Element element : rows) {
+                    try {
+                        String name = element.select("u").get(0).text();
+                        String url = element.select("a[href]").first().attr("abs:href").toString();
+                        Scanner scanner = new Scanner(element.text());
+                        scanner.useDelimiter(" - ");
+                        scanner.next();
+                        StringBuilder builder = new StringBuilder();
+                        while (scanner.hasNext()) {
+                            builder.append(scanner.next());
+                        }
+                        vaultList.add(new Substance(name, builder.toString(), url));
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            try {
+                ExpVaultFragment.expVaultRecyclerViewAdapter.notifyDataSetChanged();
+            } catch (NullPointerException e) {
+                // Do nothing
+            }
         }
     }
 }
