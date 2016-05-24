@@ -116,6 +116,11 @@ public class SubstanceActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        this.finish();
+        overridePendingTransition(R.anim.enter_from_left, R.anim.exit_to_right);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

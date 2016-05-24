@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.melancholiclabs.eleganterowid.NavigationActivity.Substance;
 import com.melancholiclabs.eleganterowid.R;
+import com.melancholiclabs.eleganterowid.exp_vault.ExpVaultFragment.OnFragmentInteractionListener;
 
 import java.util.List;
 
@@ -17,9 +18,9 @@ import java.util.List;
 public class ExpVaultRecyclerViewAdapter extends RecyclerView.Adapter<ExpVaultRecyclerViewAdapter.ViewHolder> {
 
     private final List<Substance> mValues;
-    private final ExpVaultFragment.OnFragmentInteractionListener mListener;
+    private final OnFragmentInteractionListener mListener;
 
-    public ExpVaultRecyclerViewAdapter(List<Substance> items, ExpVaultFragment.OnFragmentInteractionListener listener) {
+    public ExpVaultRecyclerViewAdapter(List<Substance> items, OnFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }

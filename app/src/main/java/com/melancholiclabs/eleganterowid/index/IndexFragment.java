@@ -73,9 +73,12 @@ public class IndexFragment extends Fragment {
 
         Context context = myView.getContext();
         RecyclerView recyclerView = (RecyclerView) myView.findViewById(R.id.list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
         VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) myView.findViewById(R.id.fast_scroller);
         fastScroller.setRecyclerView(recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+        recyclerView.setOnScrollListener(fastScroller.getOnScrollListener());
 
         indexRecyclerViewAdapter = new IndexRecyclerViewAdapter(index, mListener);
         recyclerView.setAdapter(indexRecyclerViewAdapter);

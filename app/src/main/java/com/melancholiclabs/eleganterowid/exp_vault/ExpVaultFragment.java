@@ -38,9 +38,12 @@ public class ExpVaultFragment extends Fragment {
 
         Context context = myView.getContext();
         RecyclerView recyclerView = (RecyclerView) myView.findViewById(R.id.vault_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
         VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) myView.findViewById(R.id.vault_scroller);
         fastScroller.setRecyclerView(recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+        recyclerView.setOnScrollListener(fastScroller.getOnScrollListener());
 
         expVaultRecyclerViewAdapter = new ExpVaultRecyclerViewAdapter(NavigationActivity.vaultList, mListener);
         recyclerView.setAdapter(expVaultRecyclerViewAdapter);
