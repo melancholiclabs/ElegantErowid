@@ -18,7 +18,7 @@ import android.view.MenuItem;
 
 import com.melancholiclabs.eleganterowid.exp_vault.ExpVaultFragment;
 import com.melancholiclabs.eleganterowid.index.IndexFragment;
-import com.melancholiclabs.eleganterowid.reports.ReportFragment;
+import com.melancholiclabs.eleganterowid.reports.ReportActivity;
 import com.melancholiclabs.eleganterowid.substance.SubstanceActivity;
 
 import org.json.JSONArray;
@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class NavigationActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, IndexFragment.OnFragmentInteractionListener, ExpVaultFragment.OnFragmentInteractionListener, ReportFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, IndexFragment.OnFragmentInteractionListener, ExpVaultFragment.OnFragmentInteractionListener {
 
     public static final String CHEM_URL = "http://104.131.56.118/erowid/api.php/chemIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL,researchChemicalsURL&transform=1";
     public static final String PLANT_URL = "http://104.131.56.118/erowid/api.php/plantIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1";
@@ -224,12 +224,13 @@ public class NavigationActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(Substance item) {
-        Fragment fragment = new ReportFragment().newInstance(item.url);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
-        ft.replace(R.id.fragment_container, fragment);
-        ft.addToBackStack("reports");
-        ft.commit();
+        Intent intent = new Intent(this, ReportActivity.class);
+        Bundle b = new Bundle();
+        b.putString("name", item.name);
+        b.putString("url", item.url);
+        intent.putExtras(b);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter_from_right, R.anim.exit_to_left);
     }
 
     @Override
@@ -243,11 +244,6 @@ public class NavigationActivity extends AppCompatActivity
         if (fetchVaultListTask != null && fetchVaultListTask.getStatus() == AsyncTask.Status.RUNNING) {
             fetchVaultListTask.cancel(true);
         }
-    }
-
-    @Override
-    public void onListFragmentInteraction(Report item) {
-        System.out.println(item.title);
     }
 
     public class IndexItem {
@@ -287,27 +283,6 @@ public class NavigationActivity extends AppCompatActivity
         @Override
         public String toString() {
             return name + ", " + caption + ", " + url;
-        }
-    }
-
-    public class Report {
-        public String title;
-        public String author;
-        public String substance;
-        public String date;
-        public String url;
-
-        public Report(String title, String author, String substance, String date, String url) {
-            this.title = title;
-            this.author = author;
-            this.substance = substance;
-            this.date = date;
-            this.url = url;
-        }
-
-        @Override
-        public String toString() {
-            return title + ", " + author + ", " + substance + ", " + date + ", " + url;
         }
     }
 

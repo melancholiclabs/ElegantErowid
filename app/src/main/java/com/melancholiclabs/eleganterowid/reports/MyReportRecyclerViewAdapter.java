@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.melancholiclabs.eleganterowid.NavigationActivity.Report;
 import com.melancholiclabs.eleganterowid.R;
+import com.melancholiclabs.eleganterowid.reports.ReportActivity.Report;
 import com.melancholiclabs.eleganterowid.reports.ReportFragment.OnListFragmentInteractionListener;
 
 import java.util.List;

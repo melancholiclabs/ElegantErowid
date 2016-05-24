@@ -35,6 +35,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.melancholiclabs.eleganterowid.NavigationActivity" />
         </activity>
+        <activity
+            android:name=".reports.ReportActivity"
+            android:label="@string/title_activity_report"
+            android:parentActivityName=".NavigationActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.melancholiclabs.eleganterowid.NavigationActivity" />
+        </activity>
     </application>
 
 </manifest>
