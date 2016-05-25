@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.melancholiclabs.eleganterowid.R;
 
@@ -17,9 +18,11 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
+
 public class ReportActivity extends AppCompatActivity implements ReportFragment.OnListFragmentInteractionListener {
 
-    private static final String SHOW_ALL_SUFFIX = "&ShowViews=0&Start=0&Max=1000";
+    private static final String SHOW_ALL_SUFFIX = "&ShowViews=0&Start=0&Max=2000";
 
     private static final String ARG_URL = "url";
     private static final String ARG_NAME = "name";
@@ -34,13 +37,12 @@ public class ReportActivity extends AppCompatActivity implements ReportFragment.
         setContentView(R.layout.activity_report);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Bundle b = getIntent().getExtras();
         mURL = b.getString(ARG_URL);
         mName = b.getString(ARG_NAME);
 
-        toolbar.setTitle(mName);
+        getSupportActionBar().setTitle(mName);
 
         fetchReportsTask.execute();
 
@@ -51,8 +53,27 @@ public class ReportActivity extends AppCompatActivity implements ReportFragment.
     }
 
     @Override
+    public void onBackPressed() {
+        System.out.println(getFragmentManager().getBackStackEntryCount());
+        super.onBackPressed();
+    }
+
+    @Override
     public void onListFragmentInteraction(Report item) {
-        System.out.println(item.title);
+        Fragment fragment = new ExperienceFragment().newInstance(item.title, item.author, item.substance, item.date, item.url);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.report_container, fragment);
+        ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+        ft.addToBackStack("experience");
+        ft.commit();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (fetchReportsTask != null && fetchReportsTask.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchReportsTask.cancel(true);
+        }
     }
 
     public class Report {
@@ -111,6 +132,10 @@ public class ReportActivity extends AppCompatActivity implements ReportFragment.
 
         @Override
         protected void onPostExecute(Void aVoid) {
+
+            MaterialProgressBar materialProgressBar = (MaterialProgressBar) findViewById(R.id.report_progress_bar);
+            materialProgressBar.setVisibility(View.GONE);
+
             ReportFragment.myReportRecyclerViewAdapter.notifyDataSetChanged();
         }
     }

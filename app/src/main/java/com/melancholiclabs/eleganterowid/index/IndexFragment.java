@@ -16,6 +16,7 @@ import com.melancholiclabs.eleganterowid.R;
 
 import java.util.ArrayList;
 
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 /**
@@ -85,6 +86,11 @@ public class IndexFragment extends Fragment {
 
         indexRecyclerViewAdapter.notifyDataSetChanged();
 
+        if (indexRecyclerViewAdapter.getItemCount() > 0) {
+            MaterialProgressBar materialProgressBar = (MaterialProgressBar) myView.findViewById(R.id.index_progress_bar);
+            materialProgressBar.setVisibility(View.GONE);
+        }
+
         return myView;
     }
 
@@ -148,6 +154,10 @@ public class IndexFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             indexRecyclerViewAdapter.notifyDataSetChanged();
+
+            View rootView = getView();
+            MaterialProgressBar materialProgressBar = (MaterialProgressBar) rootView.findViewById(R.id.index_progress_bar);
+            materialProgressBar.setVisibility(View.GONE);
         }
     }
 }

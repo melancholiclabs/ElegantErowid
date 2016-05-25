@@ -15,6 +15,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.melancholiclabs.eleganterowid.exp_vault.ExpVaultFragment;
 import com.melancholiclabs.eleganterowid.index.IndexFragment;
@@ -37,6 +38,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, IndexFragment.OnFragmentInteractionListener, ExpVaultFragment.OnFragmentInteractionListener {
@@ -456,6 +459,12 @@ public class NavigationActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            try {
+                MaterialProgressBar materialProgressBar = (MaterialProgressBar) findViewById(R.id.vault_progress_bar);
+                materialProgressBar.setVisibility(View.GONE);
+            } catch (NullPointerException e) {
+                // Do nothing
+            }
             try {
                 ExpVaultFragment.expVaultRecyclerViewAdapter.notifyDataSetChanged();
             } catch (NullPointerException e) {

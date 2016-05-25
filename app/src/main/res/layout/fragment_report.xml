@@ -27,23 +27,36 @@
                 style="@style/Base.TextAppearance.AppCompat.Headline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginLeft="4dp"
                 android:text="Title" />
 
-            <TextView
-                android:id="@+id/report_author_view"
-                style="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:text="Author" />
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Base.TextAppearance.AppCompat.Subhead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="Author - " />
+
+                <TextView
+                    android:id="@+id/report_author_view"
+                    style="@style/Base.TextAppearance.AppCompat.Subhead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Author" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/report_substance_view"
                 style="@style/Base.TextAppearance.AppCompat.Subhead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginLeft="4dp"
                 android:text="Substance" />
 
             <TextView
@@ -51,7 +64,7 @@
                 style="@style/Base.TextAppearance.AppCompat.Subhead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginLeft="4dp"
                 android:text="Date" />
 
         </LinearLayout>

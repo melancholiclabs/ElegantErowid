@@ -13,6 +13,7 @@ import com.melancholiclabs.eleganterowid.NavigationActivity;
 import com.melancholiclabs.eleganterowid.NavigationActivity.Substance;
 import com.melancholiclabs.eleganterowid.R;
 
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 /**
@@ -47,6 +48,11 @@ public class ExpVaultFragment extends Fragment {
 
         expVaultRecyclerViewAdapter = new ExpVaultRecyclerViewAdapter(NavigationActivity.vaultList, mListener);
         recyclerView.setAdapter(expVaultRecyclerViewAdapter);
+
+        if (expVaultRecyclerViewAdapter.getItemCount() > 0) {
+            MaterialProgressBar materialProgressBar = (MaterialProgressBar) myView.findViewById(R.id.vault_progress_bar);
+            materialProgressBar.setVisibility(View.GONE);
+        }
 
         return myView;
     }

@@ -1,13 +1,28 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.melancholiclabs.eleganterowid.reports.ExperienceFragment">
+    tools:context="com.melancholiclabs.eleganterowid.pages.BasicsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/experience_progress_bar"
+        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:mpb_progressStyle="horizontal" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/experience_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" />
+
+    </ScrollView>
 
 </FrameLayout>
