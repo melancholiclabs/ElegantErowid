@@ -1,49 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.melancholiclabs.eleganterowid">
+          package="com.melancholiclabs.eleganterowid">
 
-    <!-- Include following permission if you load images from Internet -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Include following permission if you want to cache images on SD card -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.INTERNET"/>
 
-    <application
-        android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity
-            android:name=".splash.SplashActivity"
-            android:theme="@style/SplashTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".NavigationActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".substance.SubstanceActivity"
-            android:label="@string/title_activity_substance"
-            android:parentActivityName=".NavigationActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.melancholiclabs.eleganterowid.NavigationActivity" />
-        </activity>
-        <activity
-            android:name=".reports.ReportActivity"
-            android:label="@string/title_activity_report"
-            android:parentActivityName=".NavigationActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.melancholiclabs.eleganterowid.NavigationActivity" />
-        </activity>
-    </application>
+	<application
+		android:allowBackup="true"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/app_name"
+		android:supportsRtl="true"
+		android:theme="@style/AppTheme">
+		<activity
+			android:name="com.melancholiclabs.eleganterowid.SplashActivity"
+			android:theme="@style/Splash">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
+		<activity
+			android:name="com.melancholiclabs.eleganterowid.MainActivity"
+			android:label="@string/app_name"
+			android:theme="@style/AppTheme"/>
+		<activity
+			android:name="com.melancholiclabs.eleganterowid.SubstanceActivity"
+			android:label="@string/title_activity_substance"
+			android:parentActivityName="com.melancholiclabs.eleganterowid.MainActivity"
+			android:theme="@style/AppTheme">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="com.melancholiclabs.eleganterowid.MainActivity"/>
+		</activity>
+		<activity
+			android:name="com.melancholiclabs.eleganterowid.VaultActivity"
+			android:label="VaultActivity"
+			android:parentActivityName="com.melancholiclabs.eleganterowid.MainActivity"
+			android:theme="@style/AppTheme">
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="com.melancholiclabs.eleganterowid.MainActivity"/>
+		</activity>
+	</application>
 
 </manifest>

@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
-    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-        android:id="@+id/index_progress_bar"
-        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:indeterminate="true"
-        app:mpb_progressStyle="horizontal" />
+	<me.zhanghai.android.materialprogressbar.MaterialProgressBar
+		android:id="@+id/index_progress_bar"
+		style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:indeterminate="true"
+		app:mpb_progressStyle="horizontal"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list"
-        android:name="com.melancholiclabs.eleganterowid.index.IndexFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/fast_scroller"
-        app:layoutManager="LinearLayoutManager"
-        tools:context="com.melancholiclabs.eleganterowid.index.IndexFragment"
-        tools:listitem="@layout/fragment_index" />
+	<xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller
+		android:id="@+id/index_fast_scroller"
+		android:layout_width="4dp"
+		android:layout_height="match_parent"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentRight="true"
+		android:layout_marginEnd="4dp"
+		android:layout_marginRight="4dp"
+		app:rfs_handleColor="@color/colorPrimary"/>
 
-    <xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller
-        android:id="@+id/fast_scroller"
-        android:layout_width="@dimen/margin_small"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        app:rfs_handleColor="@color/colorPrimary" />
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/index_recycler_view"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_toLeftOf="@id/index_fast_scroller"
+		android:layout_toStartOf="@id/index_fast_scroller"
+		tools:listitem="@layout/fragment_index"/>
 
 </RelativeLayout>

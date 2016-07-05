@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<android.support.v7.widget.CardView
+		xmlns:card_view="http://schemas.android.com/apk/res-auto"
+		android:id="@+id/vault_index_card_view"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="4dp"
+		android:layout_marginLeft="8dp"
+		android:layout_marginRight="8dp"
+		android:layout_marginTop="4dp"
+		android:elevation="50dp"
+		card_view:cardBackgroundColor="@color/cardview_light_background"
+		card_view:cardCornerRadius="4dp">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical"
+			android:padding="2dp">
+
+			<TextView
+				android:id="@+id/vault_index_title_view"
+				style="@style/Base.TextAppearance.AppCompat.Headline"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="2dp"
+				tools:text="@string/title"/>
+
+			<TextView
+				android:id="@+id/vault_index_author_view"
+				style="@style/Base.TextAppearance.AppCompat.Subhead"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="2dp"
+				tools:text="@string/author"/>
+
+			<TextView
+				android:id="@+id/vault_index_substance_view"
+				style="@style/Base.TextAppearance.AppCompat.Subhead"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="2dp"
+				tools:text="@string/substance"/>
+
+			<TextView
+				android:id="@+id/vault_index_date_view"
+				style="@style/Base.TextAppearance.AppCompat.Subhead"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingLeft="2dp"
+				tools:text="@string/date"/>
+
+		</LinearLayout>
+
+	</android.support.v7.widget.CardView>
+
+</FrameLayout>

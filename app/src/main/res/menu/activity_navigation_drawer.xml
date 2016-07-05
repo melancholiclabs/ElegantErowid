@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group
-        android:id="@+id/menu_top"
-        android:checkableBehavior="single">
+	<group
+		android:id="@+id/menu_top"
+		android:checkableBehavior="single">
 
-        <item
-            android:id="@+id/nav_chem_index"
-            android:icon="@drawable/ic_chemicals"
-            android:title="@string/chems" />
-        <item
-            android:id="@+id/nav_plant_index"
-            android:icon="@drawable/ic_plants"
-            android:title="@string/plants" />
-        <item
-            android:id="@+id/nav_herb_index"
-            android:icon="@drawable/ic_herbs"
-            android:title="@string/herbs" />
-        <item
-            android:id="@+id/nav_pharm_index"
-            android:icon="@drawable/ic_pharms"
-            android:title="@string/pharms" />
-        <item
-            android:id="@+id/nav_smart_index"
-            android:icon="@drawable/ic_smarts"
-            android:title="@string/smarts" />
-        <item
-            android:id="@+id/nav_animal_index"
-            android:icon="@drawable/ic_animals"
-            android:title="@string/animals" />
-    </group>
+		<item
+			android:id="@+id/nav_chem_index"
+			android:icon="@drawable/ic_chemicals"
+			android:title="@string/chems"/>
+		<item
+			android:id="@+id/nav_plant_index"
+			android:icon="@drawable/ic_plants"
+			android:title="@string/plants"/>
+		<item
+			android:id="@+id/nav_herb_index"
+			android:icon="@drawable/ic_herbs"
+			android:title="@string/herbs"/>
+		<item
+			android:id="@+id/nav_pharm_index"
+			android:icon="@drawable/ic_pharms"
+			android:title="@string/pharms"/>
+		<item
+			android:id="@+id/nav_smart_index"
+			android:icon="@drawable/ic_smarts"
+			android:title="@string/smarts"/>
+		<item
+			android:id="@+id/nav_animal_index"
+			android:icon="@drawable/ic_animals"
+			android:title="@string/animals"/>
+	</group>
 
-    <group
-        android:id="@+id/menu_bottom"
-        android:checkableBehavior="single">
+	<group
+		android:id="@+id/menu_bottom"
+		android:checkableBehavior="single">
 
-        <item
-            android:id="@+id/nav_exp_vault"
-            android:icon="@drawable/lock"
-            android:title="@string/experience_vault" />
-    </group>
+		<item
+			android:id="@+id/nav_exp_vault"
+			android:icon="@drawable/ic_lock"
+			android:title="@string/experience_vault"/>
+	</group>
 
-    <item
-        android:id="@+id/nav_about"
-        android:icon="@android:drawable/ic_dialog_alert"
-        android:title="@string/about" />
+	<item
+		android:id="@+id/nav_about"
+		android:icon="@android:drawable/ic_dialog_info"
+		android:title="@string/about"/>
 
 </menu>

@@ -1,15 +1,298 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	tools:context="melancholiclabs.com.eleganterowid.HomeFragment">
 
-    <TextView
-        style="@style/Base.TextAppearance.AppCompat.Body2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="12dp"
-        android:text="@string/home_message"
-        android:textAlignment="center"
-        android:textSize="20sp" />
+	<android.support.v7.widget.CardView
+		xmlns:card_view="http://schemas.android.com/apk/res-auto"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="4dp"
+		android:layout_marginLeft="8dp"
+		android:layout_marginRight="4dp"
+		android:layout_marginTop="4dp"
+		android:elevation="50dp"
+		card_view:cardBackgroundColor="@color/cardview_light_background"
+		card_view:cardCornerRadius="4dp">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<android.support.v7.widget.SearchView
+				android:id="@+id/home_search_view"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layoutDirection="rtl"
+				android:padding="8dp"/>
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:orientation="vertical">
+
+				<CheckBox
+					android:id="@+id/checkbox_substances"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:text="@string/substances"/>
+
+				<GridLayout
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:columnCount="3"
+					android:paddingLeft="32dp"
+					android:rowCount="2">
+
+					<CheckBox
+						android:id="@+id/checkbox_chems"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="@string/chems"/>
+
+					<CheckBox
+						android:id="@+id/checkbox_plants"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_alignBottom="@id/checkbox_chems"
+						android:text="@string/plants"/>
+
+					<CheckBox
+						android:id="@+id/checkbox_herbs"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="@string/herbs"/>
+
+					<CheckBox
+						android:id="@+id/checkbox_pharms"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="@string/pharms"/>
+
+					<CheckBox
+						android:id="@+id/checkbox_smarts"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="@string/smarts"/>
+
+					<CheckBox
+						android:id="@+id/checkbox_animals"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:text="@string/animals"/>
+
+				</GridLayout>
+
+				<CheckBox
+					android:id="@+id/checkbox_vault"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:text="@string/experience_vault"/>
+
+			</LinearLayout>
+
+		</LinearLayout>
+
+	</android.support.v7.widget.CardView>
+
+	<android.support.v7.widget.CardView
+		xmlns:card_view="http://schemas.android.com/apk/res-auto"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginBottom="4dp"
+		android:layout_marginLeft="8dp"
+		android:layout_marginRight="4dp"
+		android:layout_marginTop="4dp"
+		android:elevation="50dp"
+		card_view:cardBackgroundColor="@color/cardview_light_background"
+		card_view:cardCornerRadius="4dp">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="Most Popular"
+				android:textAlignment="center"
+				android:textSize="24sp"/>
+
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:orientation="vertical">
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:orientation="horizontal">
+
+					<Button
+						android:id="@+id/alcohol_button"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_gravity="center"
+						android:layout_margin="6dp"
+						android:layout_weight="1"
+						android:background="@color/colorAccent"
+						android:text="Alcohol"
+						android:textColor="@android:color/white"
+						android:textSize="@dimen/textSizeLarge_openSource"/>
+
+					<Button
+						android:id="@+id/cannabis_button"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_gravity="center"
+						android:layout_margin="6dp"
+						android:layout_weight="1"
+						android:background="@color/colorAccent"
+						android:text="Cannabis"
+						android:textColor="@android:color/white"
+						android:textSize="@dimen/textSizeLarge_openSource"/>
+
+				</LinearLayout>
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:orientation="horizontal">
+
+					<Button
+						android:id="@+id/cocaine_button"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_gravity="center"
+						android:layout_margin="6dp"
+						android:layout_weight="1"
+						android:background="@color/colorAccent"
+						android:text="Cocaine"
+						android:textColor="@android:color/white"
+						android:textSize="@dimen/textSizeLarge_openSource"/>
+
+					<Button
+						android:id="@+id/dmt_button"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_gravity="center"
+						android:layout_margin="6dp"
+						android:layout_weight="1"
+						android:background="@color/colorAccent"
+						android:text="DMT"
+						android:textColor="@android:color/white"
+						android:textSize="@dimen/textSizeLarge_openSource"/>
+
+				</LinearLayout>
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:orientation="horizontal">
+
+					<Button
+						android:id="@+id/heroin_button"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_gravity="center"
+						android:layout_margin="6dp"
+						android:layout_weight="1"
+						android:background="@color/colorAccent"
+						android:text="Heroin"
+						android:textColor="@android:color/white"
+						android:textSize="@dimen/textSizeLarge_openSource"/>
+
+					<Button
+						android:id="@+id/ketamine_button"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_gravity="center"
+						android:layout_margin="6dp"
+						android:layout_weight="1"
+						android:background="@color/colorAccent"
+						android:text="Ketamine"
+						android:textColor="@android:color/white"
+						android:textSize="@dimen/textSizeLarge_openSource"/>
+
+				</LinearLayout>
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:orientation="horizontal">
+
+					<Button
+						android:id="@+id/lsd_button"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_gravity="center"
+						android:layout_margin="6dp"
+						android:layout_weight="1"
+						android:background="@color/colorAccent"
+						android:text="LSD"
+						android:textColor="@android:color/white"
+						android:textSize="@dimen/textSizeLarge_openSource"/>
+
+					<Button
+						android:id="@+id/mdma_button"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_gravity="center"
+						android:layout_margin="6dp"
+						android:layout_weight="1"
+						android:background="@color/colorAccent"
+						android:text="MDMA"
+						android:textColor="@android:color/white"
+						android:textSize="@dimen/textSizeLarge_openSource"/>
+
+				</LinearLayout>
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_weight="1"
+					android:orientation="horizontal">
+
+					<Button
+						android:id="@+id/meth_button"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_gravity="center"
+						android:layout_margin="6dp"
+						android:layout_weight="1"
+						android:background="@color/colorAccent"
+						android:text="Meth"
+						android:textColor="@android:color/white"
+						android:textSize="@dimen/textSizeLarge_openSource"/>
+
+					<Button
+						android:id="@+id/mushrooms_button"
+						android:layout_width="match_parent"
+						android:layout_height="match_parent"
+						android:layout_gravity="center"
+						android:layout_margin="6dp"
+						android:layout_weight="1"
+						android:background="@color/colorAccent"
+						android:text="Mushrooms"
+						android:textColor="@android:color/white"
+						android:textSize="@dimen/textSizeLarge_openSource"/>
+
+				</LinearLayout>
+
+			</LinearLayout>
+
+		</LinearLayout>
+
+	</android.support.v7.widget.CardView>
 
 </LinearLayout>

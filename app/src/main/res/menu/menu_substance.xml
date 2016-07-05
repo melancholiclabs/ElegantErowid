@@ -1,10 +1,18 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.melancholiclabs.eleganterowid.substance.SubstanceActivity">
-    <item
-        android:id="@+id/action_open_in_browser"
-        android:orderInCategory="100"
-        android:title="@string/open_in_browser"
-        app:showAsAction="never" />
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:context="melancholiclabs.com.eleganterowid.SubstanceActivity">
+	<item
+		android:id="@+id/action_substance_vault"
+		android:icon="@drawable/ic_lock_options"
+		android:orderInCategory="1"
+		android:title="@string/substance_vault"
+		app:showAsAction="ifRoom"/>
+	<item
+		android:id="@+id/action_substance_open_in_browser"
+		android:icon="@drawable/ic_globe"
+		android:orderInCategory="2"
+		android:title="@string/open_in_browser"
+		app:showAsAction="ifRoom"/>
 </menu>
