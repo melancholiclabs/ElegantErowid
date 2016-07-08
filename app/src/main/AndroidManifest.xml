@@ -4,6 +4,8 @@
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 
+	<uses-sdk android:minSdkVersion="16"/>
+
 	<application
 		android:allowBackup="true"
 		android:icon="@mipmap/ic_launcher"
@@ -40,6 +42,10 @@
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="com.melancholiclabs.eleganterowid.MainActivity"/>
 		</activity>
+
+		<meta-data
+			android:name="io.fabric.ApiKey"
+			android:value="5b5cdafdbffb538eed102a48932870236e99ec16"/>
 	</application>
 
 </manifest>

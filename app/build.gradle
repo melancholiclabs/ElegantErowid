@@ -1,4 +1,19 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
     compileSdkVersion 23
@@ -8,8 +23,8 @@ android {
         applicationId "com.melancholiclabs.eleganterowid"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 4
-        versionName "2.0"
+        versionCode 12
+        versionName "2.4.4"
     }
     buildTypes {
         release {
@@ -38,4 +53,7 @@ dependencies {
     compile 'me.zhanghai.android.materialprogressbar:library:1.1.6'
     compile 'com.google.guava:guava:19.0'
     compile 'com.github.hotchemi:android-rate:1.0.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.0@aar') {
+        transitive = true;
+    }
 }

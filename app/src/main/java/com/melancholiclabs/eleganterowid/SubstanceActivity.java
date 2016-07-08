@@ -17,16 +17,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import com.melancholiclabs.eleganterowid.model.IndexItem;
+
+import java.util.ArrayList;
 
 public class SubstanceActivity extends AppCompatActivity {
 
-    private static final String TAG = SubstanceActivity.class.getName();
-
     public static final ErowidDB EROWID_DB = ErowidDB.getInstance();
-
     public static final int MAIN = 0;
     public static final int BASICS = 1;
     public static final int EFFECTS = 2;
@@ -36,7 +33,7 @@ public class SubstanceActivity extends AppCompatActivity {
     public static final int DOSE = 6;
     public static final int CHEMISTRY = 7;
     public static final int RESEARCH_CHEMICAL = 8;
-
+    private static final String TAG = SubstanceActivity.class.getName();
     private static final String ARG_ID = "id";
     private static final String ARG_NAME = "name";
     private static final String ARG_CAPTION = "caption";
@@ -99,6 +96,7 @@ public class SubstanceActivity extends AppCompatActivity {
             if (url.contains("dose")) mPageTitles.add("DOSE");
             if (url.contains("chemistry")) mPageTitles.add("CHEMISTRY");
             if (url.contains("research_chems")) mPageTitles.add("RESEARCH CHEMICAL");
+            Log.d(TAG, url);
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

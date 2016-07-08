@@ -122,88 +122,6 @@ public class ErowidDB {
     private boolean reportIndexLoaded = false;
 
     /**
-     * Enum representing substance indexes that hold the value of their respective url.
-     */
-    public enum Index {
-        CHEMICALS("http://104.131.56.118/erowid/api.php/chemIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL,researchChemicalsURL&transform=1", "chemIndex"),
-        PLANTS("http://104.131.56.118/erowid/api.php/plantIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1", "plantIndex"),
-        HERBS("http://104.131.56.118/erowid/api.php/herbIndex?columns=id,name,url,commonNames,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1", "herbIndex"),
-        PHARMS("http://104.131.56.118/erowid/api.php/pharmIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1", "pharmIndex"),
-        SMARTS("http://104.131.56.118/erowid/api.php/smartIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1", "smartIndex"),
-        ANIMALS("http://104.131.56.118/erowid/api.php/animalIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1", "animalIndex"),
-        VAULT("http://www.erowid.org/experiences/exp_list.shtml", "vaultIndex");
-
-        private String url;
-        private String indexName;
-
-        Index(String url, String indexName) {
-            this.url = url;
-            this.indexName = indexName;
-        }
-
-        public String getUrl() {
-            return this.url;
-        }
-
-        public String getIndexName() {
-            return this.indexName;
-        }
-    }
-
-    /**
-     * Enum representing tokens of an api call.
-     */
-    public enum ApiURL {
-        SUBSTANCE_URL_PREFIX("http://104.131.56.118/erowid/api.php/"),
-        SUBSTANCE_URL_MIDDLE("?filter=id,eq,"),
-        SUBSTANCE_URL_SUFFIX("&columns=effectsClassification,botanicalClassification,commonNames,chemicalName,uses,description,imageURL,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL,researchChemicalsURL&transform=1"),
-
-        BASICS_URL_PREFIX("http://104.131.56.118/erowid/api.php/basicsIndex?filter=id,eq,"),
-        BASICS_URL_SUFFIX("&columns=description,descriptionSections,effects,effectsSections,problems,problemsSections,cautionDisclaimer&transform=1"),
-        BASICS_URL_INDEX("basicsIndex"),
-
-        EFFECTS_URL_PREFIX("http://104.131.56.118/erowid/api.php/effectsIndex?filter=id,eq,"),
-        EFFECTS_URL_SUFFIX("&columns=duration,positiveEffects,neutralEffects,negativeEffects,description,experienceReports,cautionDisclaimer&transform=1"),
-        EFFECTS_URL_INDEX("effectsIndex"),
-
-        IMAGES_URL_PREFIX("http://104.131.56.118/erowid/api.php/imagesIndex?filter=id,eq,"),
-        IMAGES_URL_SUFFIX("&columns=imageEntryList&transform=1"),
-        IMAGES_URL_INDEX("imagesIndex"),
-
-        HEALTH_URL_PREFIX("http://104.131.56.118/erowid/api.php/healthIndex?filter=id,eq,"),
-        HEALTH_URL_SUFFIX("&columns=notes,deaths,warnings,cautions,benefits&transform=1"),
-        HEALTH_URL_INDEX("healthIndex"),
-
-        LAW_URL_PREFIX("http://104.131.56.118/erowid/api.php/lawIndex?filter=id,eq,"),
-        LAW_URL_SUFFIX("&columns=legalTable,federalLawText,stateLaw,internationalLaw,cautionDisclaimer&transform=1"),
-        LAW_URL_INDEX("lawIndex"),
-
-        DOSE_URL_PREFIX("http://104.131.56.118/erowid/api.php/doseIndex?filter=id,eq,"),
-        DOSE_URL_SUFFIX("&columns=doseTable,doseText,notes,cautionDisclaimer&transform=1"),
-        DOSE_URL_INDEX("doseIndex"),
-
-        CHEMISTRY_URL_PREFIX("http://104.131.56.118/erowid/api.php/chemistryIndex?filter=id,eq,"),
-        CHEMISTRY_URL_SUFFIX("&columns=chemTable,moleculeURL&transform=1"),
-        CHEMISTRY_URL_INDEX("chemistryIndex"),
-
-        RESEARCH_CHEMICAL_URL_PREFIX("http://104.131.56.118/erowid/api.php/researchChemicalIndex?filter=id,eq,"),
-        RESEARCH_CHEMICAL_URL_SUFFIX("&columns=summaryText,imageURL&transform=1"),
-        RESEARCH_CHEMICAL_URL_INDEX("researchChemicalIndex"),
-
-        VAULT_URL_SHOW_MORE("&ShowViews=0&Start=0&Max=2000");
-
-        private String token;
-
-        ApiURL(String token) {
-            this.token = token;
-        }
-
-        public String getToken() {
-            return this.token;
-        }
-    }
-
-    /**
      * Empty constructor to avoid object creation.
      */
     public ErowidDB() {
@@ -606,8 +524,7 @@ public class ErowidDB {
             public boolean apply(String input) {
                 String temp = input.toLowerCase().replaceAll("-", "");
                 if (temp.contains(query.toLowerCase())) return true;
-                if (query.toLowerCase().contains(temp)) return true;
-                return false;
+                return query.toLowerCase().contains(temp);
             }
         });
 
@@ -837,6 +754,9 @@ public class ErowidDB {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, item.toString());
+            e.printStackTrace();
         }
         substance = new Substance(item, imageURL, effectsClassification, botanicalClassification, chemicalName, commonNames, uses, description);
     }
@@ -888,6 +808,9 @@ public class ErowidDB {
             }
 
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, substance.toString());
             e.printStackTrace();
         }
         substance.loadBasics(description, effects, problems, disclaimer);
@@ -946,6 +869,9 @@ public class ErowidDB {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, substance.toString());
+            e.printStackTrace();
         }
         substance.loadEffects(positiveEffects, neutralEffects, negativeEffects, description, disclaimer);
     }
@@ -978,6 +904,9 @@ public class ErowidDB {
                 Log.d(TAG, "No value for imageEntryList");
             }
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, substance.toString());
             e.printStackTrace();
         }
         substance.loadImages(imageEntryList);
@@ -1036,6 +965,9 @@ public class ErowidDB {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, substance.toString());
+            e.printStackTrace();
         }
         substance.loadHealth(notes, deaths, warnings, cautions, benefits);
     }
@@ -1052,6 +984,8 @@ public class ErowidDB {
         builder.append(ApiURL.LAW_URL_PREFIX.getToken());
         builder.append(substance.getId());
         builder.append(ApiURL.LAW_URL_SUFFIX.getToken());
+
+        Log.d(TAG, builder.toString());
 
         String json = getApiCallJson(builder.toString());
 
@@ -1093,6 +1027,9 @@ public class ErowidDB {
             }
         } catch (JSONException e) {
             Log.d(TAG, json);
+            e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, substance.toString());
             e.printStackTrace();
         }
         substance.loadLaw(legalTable, federalLaw, stateLaw, internationalLaw, disclaimer);
@@ -1145,6 +1082,9 @@ public class ErowidDB {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, substance.toString());
+            e.printStackTrace();
         }
         substance.loadDose(doseTable, doseText, notes, disclaimer);
     }
@@ -1183,6 +1123,9 @@ public class ErowidDB {
                 Log.d(TAG, "No value for moleculeUrl");
             }
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, substance.toString());
             e.printStackTrace();
         }
         substance.loadChemistry(chemTable, moleculeUrl);
@@ -1223,6 +1166,9 @@ public class ErowidDB {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, substance.toString());
+            e.printStackTrace();
         }
         substance.loadResearchChemical(summary, imageUrl);
     }
@@ -1237,6 +1183,7 @@ public class ErowidDB {
         reportIndex.clear();
         try {
             Document doc = Jsoup.connect(item.getUrl()).get();
+            Log.d(TAG, item.getUrl());
             Element link = doc.select("td a").get(1);
             String fullDocUrl = link.attr("abs:href");
 
@@ -1253,6 +1200,10 @@ public class ErowidDB {
                 reportIndex.add(new VaultIndexItem(title, author, substance, date, url));
             }
         } catch (IOException e) {
+            Log.e(TAG, item.toString());
+            e.printStackTrace();
+        } catch (IndexOutOfBoundsException e) {
+            Log.e(TAG, item.toString());
             e.printStackTrace();
         }
         reportIndexLoaded = true;
@@ -1275,33 +1226,49 @@ public class ErowidDB {
 
         try {
             Document doc = Jsoup.connect(item.getUrl()).get();
-            Element dataTable = doc.select("table").get(2);
-            StringBuilder builder = new StringBuilder();
-            Elements tr = dataTable.select("tr");
-            for (Element trElement : tr) {
-                StringBuilder lineBuilder = new StringBuilder();
-                Elements td = trElement.select("td");
-                for (Element tdElement : td) {
-                    String line = tdElement.text();
-                    lineBuilder.append(line.replace("DOSE:", ""));
-                    lineBuilder.append("\t");
+            // Gets the dose table if it's available
+            try {
+                Element dataTable = doc.select("TABLE[class = dosechart]").first();
+                StringBuilder builder = new StringBuilder();
+                Elements tr = dataTable.select("tr");
+                for (Element trElement : tr) {
+                    StringBuilder lineBuilder = new StringBuilder();
+                    Elements td = trElement.select("td");
+                    for (Element tdElement : td) {
+                        String line = tdElement.text();
+                        line = line.replace("DOSE:", "");
+                        line = line.replaceAll(".\\s(?=T)", "");
+                        lineBuilder.append(line);
+                        lineBuilder.append("\t");
+                    }
+                    builder.append(lineBuilder.toString().trim());
+                    builder.append("\n");
                 }
-                builder.append(lineBuilder.toString().trim());
-                builder.append("\n");
+                doseTable = builder.toString().trim();
+            } catch (NullPointerException e) {
+                Log.d(TAG, "No dose data for this report");
             }
 
-            doseTable = builder.toString().trim();
+            // Gets the weight table if it's available
+            try {
+                Element weightTable = doc.select("TABLE[class = bodyweight]").first();
+                bodyWeight = weightTable.select("tr td").get(1).text();
+            } catch (NullPointerException e) {
+                Log.d(TAG, "No weight data for this report");
+            }
 
-            Element weightTable = doc.select("table").get(3);
-            bodyWeight = weightTable.select("tr td").get(1).text();
-
-            Element footerTable = doc.select("table").get(4);
-            System.out.println(footerTable.toString());
-            year = footerTable.select("tr td").first().text();
-            id = footerTable.select("tr td").get(1).text();
-            gender = footerTable.select("tr td").get(2).text();
-            age = footerTable.select("tr td").get(4).text();
-            views = footerTable.select("tr td").get(7).text();
+            // Gets the footer table if it's available
+            try {
+                Element footerTable = doc.select("TABLE[class = footdata]").first();
+                System.out.println(footerTable.toString());
+                year = footerTable.select("tr td").first().text();
+                id = footerTable.select("tr td").get(1).text();
+                gender = footerTable.select("tr td").get(2).text();
+                age = footerTable.select("tr td").get(4).text();
+                views = footerTable.select("tr td").get(7).text();
+            } catch (NullPointerException e) {
+                Log.d(TAG, "No footer data for this report");
+            }
 
             String raw = doc.select("div[class=report-text-surround]").first().toString();
 
@@ -1318,7 +1285,7 @@ public class ErowidDB {
                 }
             }
             text = textBuilder.toString();
-        } catch (Exception e) {
+        } catch (Exception e) {                         // TODO change to appropriate exception
             e.printStackTrace();
         }
         report = new Report(item, doseTable, bodyWeight, text, year, gender, id, age, views);
@@ -1450,5 +1417,87 @@ public class ErowidDB {
             if (item.getName().equals(name)) return item;
         }
         return null;
+    }
+
+    /**
+     * Enum representing substance indexes that hold the value of their respective url.
+     */
+    public enum Index {
+        CHEMICALS("http://104.131.56.118/erowid/api.php/chemIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL,researchChemicalsURL&transform=1", "chemIndex"),
+        PLANTS("http://104.131.56.118/erowid/api.php/plantIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1", "plantIndex"),
+        HERBS("http://104.131.56.118/erowid/api.php/herbIndex?columns=id,name,url,commonNames,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1", "herbIndex"),
+        PHARMS("http://104.131.56.118/erowid/api.php/pharmIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1", "pharmIndex"),
+        SMARTS("http://104.131.56.118/erowid/api.php/smartIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1", "smartIndex"),
+        ANIMALS("http://104.131.56.118/erowid/api.php/animalIndex?columns=id,name,url,effectsClassification,category,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL&transform=1", "animalIndex"),
+        VAULT("http://www.erowid.org/experiences/exp_list.shtml", "vaultIndex");
+
+        private String url;
+        private String indexName;
+
+        Index(String url, String indexName) {
+            this.url = url;
+            this.indexName = indexName;
+        }
+
+        public String getUrl() {
+            return this.url;
+        }
+
+        public String getIndexName() {
+            return this.indexName;
+        }
+    }
+
+    /**
+     * Enum representing tokens of an api call.
+     */
+    public enum ApiURL {
+        SUBSTANCE_URL_PREFIX("http://104.131.56.118/erowid/api.php/"),
+        SUBSTANCE_URL_MIDDLE("?filter=id,eq,"),
+        SUBSTANCE_URL_SUFFIX("&columns=effectsClassification,botanicalClassification,commonNames,chemicalName,uses,description,imageURL,basicsURL,effectsURL,imagesURL,healthURL,lawURL,doseURL,chemistryURL,researchChemicalsURL&transform=1"),
+
+        BASICS_URL_PREFIX("http://104.131.56.118/erowid/api.php/basicsIndex?filter=id,eq,"),
+        BASICS_URL_SUFFIX("&columns=description,descriptionSections,effects,effectsSections,problems,problemsSections,cautionDisclaimer&transform=1"),
+        BASICS_URL_INDEX("basicsIndex"),
+
+        EFFECTS_URL_PREFIX("http://104.131.56.118/erowid/api.php/effectsIndex?filter=id,eq,"),
+        EFFECTS_URL_SUFFIX("&columns=duration,positiveEffects,neutralEffects,negativeEffects,description,experienceReports,cautionDisclaimer&transform=1"),
+        EFFECTS_URL_INDEX("effectsIndex"),
+
+        IMAGES_URL_PREFIX("http://104.131.56.118/erowid/api.php/imagesIndex?filter=id,eq,"),
+        IMAGES_URL_SUFFIX("&columns=imageEntryList&transform=1"),
+        IMAGES_URL_INDEX("imagesIndex"),
+
+        HEALTH_URL_PREFIX("http://104.131.56.118/erowid/api.php/healthIndex?filter=id,eq,"),
+        HEALTH_URL_SUFFIX("&columns=notes,deaths,warnings,cautions,benefits&transform=1"),
+        HEALTH_URL_INDEX("healthIndex"),
+
+        LAW_URL_PREFIX("http://104.131.56.118/erowid/api.php/lawIndex?filter=id,eq,"),
+        LAW_URL_SUFFIX("&columns=legalTable,federalLawText,stateLaw,internationalLaw,cautionDisclaimer&transform=1"),
+        LAW_URL_INDEX("lawIndex"),
+
+        DOSE_URL_PREFIX("http://104.131.56.118/erowid/api.php/doseIndex?filter=id,eq,"),
+        DOSE_URL_SUFFIX("&columns=doseTable,doseText,notes,cautionDisclaimer&transform=1"),
+        DOSE_URL_INDEX("doseIndex"),
+
+        CHEMISTRY_URL_PREFIX("http://104.131.56.118/erowid/api.php/chemistryIndex?filter=id,eq,"),
+        CHEMISTRY_URL_SUFFIX("&columns=chemTable,moleculeURL&transform=1"),
+        CHEMISTRY_URL_INDEX("chemistryIndex"),
+
+        RESEARCH_CHEMICAL_URL_PREFIX("http://104.131.56.118/erowid/api.php/researchChemicalIndex?filter=id,eq,"),
+        RESEARCH_CHEMICAL_URL_SUFFIX("&columns=summaryText,imageURL&transform=1"),
+        RESEARCH_CHEMICAL_URL_INDEX("researchChemicalIndex"),
+
+        VAULT_URL_SHOW_MORE("&ShowViews=0&Start=0&Max=2000");
+
+        private String token;
+
+        ApiURL(String token) {
+            this.token = token;
+        }
+
+        public String getToken() {
+            return this.token;
+        }
     }
 }

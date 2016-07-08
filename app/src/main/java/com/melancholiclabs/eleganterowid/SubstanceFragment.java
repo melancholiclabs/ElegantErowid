@@ -17,6 +17,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.melancholiclabs.eleganterowid.model.IndexItem;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
@@ -38,7 +40,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
-import com.melancholiclabs.eleganterowid.model.IndexItem;
 
 /**
  * Created by Melancoholic on 7/3/2016.
@@ -148,305 +149,18 @@ public class SubstanceFragment extends Fragment {
         return v;
     }
 
-    /**
-     * Loads the Main page of the current Substance object and creates basic views for each field.
-     */
-    public class LoadMainPageTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            EROWID_DB.loadSubstance(new IndexItem(mId, mCategory, mPages));
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            mProgressBar.setVisibility(View.GONE);
-
-            final String imageUrl = EROWID_DB.getSubstance().getImageUrl();
-            final String effectsClassification = EROWID_DB.getSubstance().getEffectsClassification();
-            final String botanicalClassification = EROWID_DB.getSubstance().getBotanicalClassification();
-            final String chemicalName = EROWID_DB.getSubstance().getChemicalName();
-            final String commonNames = EROWID_DB.getSubstance().getCommonNames();
-            final String uses = EROWID_DB.getSubstance().getUses();
-            final String description = EROWID_DB.getSubstance().getDescription();
-
-
-            if (imageUrl != null) addImage(imageUrl);
-            if (effectsClassification != null)
-                addSection("Effects Classification", effectsClassification);
-            if (botanicalClassification != null)
-                addSection("Botanical Classification", botanicalClassification);
-            if (chemicalName != null) addSection("Chemical Name", chemicalName);
-            if (commonNames != null) addSection("Common Names", commonNames);
-            if (uses != null) addSection("Uses", uses);
-            if (description != null) addSection("Description", description);
-
-            getView().invalidate();
-        }
-    }
-
-    /**
-     * Loads the Basics page of the current Substance object and creates basic views for each field.
-     */
-    public class LoadBasicsPageTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            EROWID_DB.loadSubstanceBasics();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (EROWID_DB.getSubstance().getBasics() == null) return;
-
-            mProgressBar.setVisibility(View.GONE);
-
-            final String description = EROWID_DB.getSubstance().getBasics().getDescription();
-            final String effects = EROWID_DB.getSubstance().getBasics().getEffects();
-            final String problems = EROWID_DB.getSubstance().getBasics().getProblems();
-            final String disclaimer = EROWID_DB.getSubstance().getBasics().getDisclaimer();
-
-            if (description != null) addSection("Description", toParagraph(description));
-            if (effects != null) addSection("Effects", toParagraph(effects));
-            if (problems != null) addSection("Problems", toParagraph(problems));
-            if (disclaimer != null) addSection("Disclaimer", toParagraph(disclaimer));
-
-            getView().invalidate();
-        }
-    }
-
-    /**
-     * Loads the Effectss page of the current Substance object and creates basic views for each field.
-     */
-    public class LoadEffectsPageTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            EROWID_DB.loadSubstanceEffects();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (EROWID_DB.getSubstance().getEffects() == null) return;
-
-            mProgressBar.setVisibility(View.GONE);
-
-            final String positiveEffects = EROWID_DB.getSubstance().getEffects().getPositiveEffects();
-            final String neutralEffects = EROWID_DB.getSubstance().getEffects().getNeutralEffects();
-            final String negativeEffects = EROWID_DB.getSubstance().getEffects().getNegativeEffects();
-            final String description = EROWID_DB.getSubstance().getEffects().getDescription();
-            final String disclaimer = EROWID_DB.getSubstance().getEffects().getDisclaimer();
-
-            if (positiveEffects != null)
-                addSection("Positive Effects", toBulletedList(positiveEffects));
-            if (neutralEffects != null)
-                addSection("Neutral Effects", toBulletedList(neutralEffects));
-            if (negativeEffects != null)
-                addSection("Negative Effects", toBulletedList(negativeEffects));
-            if (description != null) addSection("Description", toParagraph(description));
-            if (disclaimer != null) addSection("Disclaimer", disclaimer);
-
-            getView().invalidate();
-        }
-    }
-
-    /**
-     * Loads the Images page of the current Substance object and creates basic views for each field.
-     */
-    public class LoadImagesPageTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            EROWID_DB.loadSubstanceImages();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (EROWID_DB.getSubstance().getImages() == null) return;
-
-            mProgressBar.setVisibility(View.GONE);
-
-            final String imageEntryList = EROWID_DB.getSubstance().getImages().getImageEntryList();
-
-            if (imageEntryList != null) {
-                TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-                titleTextView.setText("Image Entry List");
-                mLinearLayout.addView(titleTextView);
-
-                ArrayList<String> matches = new ArrayList<>();
-                Pattern pattern = Pattern.compile("https(\\S*?)\\s");
-                Matcher matcher = pattern.matcher(imageEntryList);
-                while (matcher.find()) {
-                    matches.add(matcher.group());
-                }
-                String linkText = imageEntryList;
-                for (String match : matches) {
-                    linkText = linkText.replace(match, "<br/><a href='" + match + "'>" + match + "</a><br/>");
-                }
-
-                Scanner scanner = new Scanner(linkText);
-                while (scanner.hasNextLine()) {
-                    TextView textView = (TextView) getLayoutInflater(null).inflate(R.layout.paragraph_text_view, null);
-                    textView.setText(Html.fromHtml(scanner.nextLine()));
-                    Linkify.addLinks(textView, Linkify.ALL);
-                    textView.setMovementMethod(LinkMovementMethod.getInstance());
-                    mLinearLayout.addView(textView);
-                }
-            }
-
-            getView().invalidate();
-        }
-    }
-
-    /**
-     * Loads the Health page of the current Substance object and creates basic views for each field.
-     */
-    public class LoadHealthPageTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            EROWID_DB.loadSubstanceHealth();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (EROWID_DB.getSubstance().getHealth() == null) return;
-
-            mProgressBar.setVisibility(View.GONE);
-
-            final String notes = EROWID_DB.getSubstance().getHealth().getNotes();
-            final String deaths = EROWID_DB.getSubstance().getHealth().getDeaths();
-            final String warnings = EROWID_DB.getSubstance().getHealth().getWarnings();
-            final String cautions = EROWID_DB.getSubstance().getHealth().getCautions();
-            final String benefits = EROWID_DB.getSubstance().getHealth().getBenefits();
-
-            if (notes != null) addSection("Notes", toParagraph(notes));
-            if (deaths != null) addSection("Deaths", toParagraph(deaths));
-            if (warnings != null) addSection("Warnings", toParagraph(warnings));
-            if (cautions != null) addSection("Cautions", toParagraph(cautions));
-            if (benefits != null) addSection("Benefits", toParagraph(benefits));
-
-            getView().invalidate();
-        }
-    }
-
-    /**
-     * Loads the Law page of the current Substance object and creates basic views for each field.
-     */
-    public class LoadLawPageTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            EROWID_DB.loadSubstanceLaw();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (EROWID_DB.getSubstance().getLaw() == null) return;
-
-            mProgressBar.setVisibility(View.GONE);
-
-            final String legalTable = EROWID_DB.getSubstance().getLaw().getLegalTable();
-            final String federalLaw = EROWID_DB.getSubstance().getLaw().getFederalLaw();
-            final String stateLaw = EROWID_DB.getSubstance().getLaw().getStateLaw();
-            final String internationalLaw = EROWID_DB.getSubstance().getLaw().getInternationalLaw();
-            final String disclaimer = EROWID_DB.getSubstance().getLaw().getDisclaimer();
-
-            if (legalTable != null) addTable("Legal Table", legalTable);
-            if (federalLaw != null) addSection("Federal Law", toParagraph(federalLaw));
-            // TODO fix this so that a string null check isn't required
-            if (stateLaw != null && !stateLaw.equals("null"))
-                addSection("State Law", toParagraph(stateLaw));
-            if (internationalLaw != null)
-                addSection("International Law", toParagraph(internationalLaw));
-            if (disclaimer != null) addSection("Disclaimer", disclaimer);
-
-            getView().invalidate();
-        }
-    }
-
-    /**
-     * Loads the Dose page of the current Substance object and creates basic views for each field.
-     */
-    public class LoadDosePageTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            EROWID_DB.loadSubstanceDose();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (EROWID_DB.getSubstance().getDose() == null) return;
-
-            mProgressBar.setVisibility(View.GONE);
-
-            final String doseTable = EROWID_DB.getSubstance().getDose().getDoseTable();
-            final String doseText = EROWID_DB.getSubstance().getDose().getDoseText();
-            final String notes = EROWID_DB.getSubstance().getDose().getNotes();
-            final String disclaimer = EROWID_DB.getSubstance().getDose().getDisclaimer();
-
-            if (doseTable != null) addTable("Dose Table", doseTable);
-            if (doseText != null) addSection("Dosing", doseText);
-            // TODO fix this so that a string null check isn't required
-            if (notes != null && !notes.equals("null") && !notes.equals("None"))
-                addSection("Notes", toParagraph(notes));
-            if (disclaimer != null) addSection("Disclaimer", disclaimer);
-
-            getView().invalidate();
-        }
-    }
-
-    /**
-     * Loads the Chemistry page of the current Substance object and creates basic views for each field.
-     */
-    public class LoadChemistryPageTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            EROWID_DB.loadSubstanceChemistry();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (EROWID_DB.getSubstance().getChemistry() == null) return;
-
-            mProgressBar.setVisibility(View.GONE);
-
-            final String chemTable = EROWID_DB.getSubstance().getChemistry().getChemTable();
-            final String moleculeURL = EROWID_DB.getSubstance().getChemistry().getMoleculeUrl();
-
-            if (chemTable != null) addChemTable("Chemistry Table", chemTable);
-            if (moleculeURL != null) addImage(moleculeURL);
-
-            getView().invalidate();
-        }
-    }
-
-    /**
-     * Loads the ResearchChemical page of the current Substance object and creates basic views for each field.
-     */
-    public class LoadResearchChemicalPageTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            EROWID_DB.loadSubstanceResearchChemical();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (EROWID_DB.getSubstance().getResearchChemical() == null) return;
-
-            mProgressBar.setVisibility(View.GONE);
-
-            final String imageUrl = EROWID_DB.getSubstance().getResearchChemical().getImageUrl();
-            final String summary = EROWID_DB.getSubstance().getResearchChemical().getSummary();
-
-            if (imageUrl != null) addImage(imageUrl);
-            if (summary != null) addSection("Summary", toParagraph(summary));
-
-            getView().invalidate();
-        }
+    @Override
+    public void onStop() {
+        super.onStop();
+        Utils.gracefullyStop(mLoadMainPageTask);
+        Utils.gracefullyStop(mLoadBasicsPageTask);
+        Utils.gracefullyStop(mLoadEffectsPageTask);
+        Utils.gracefullyStop(mLoadImagesPageTask);
+        Utils.gracefullyStop(mLoadHealthPageTask);
+        Utils.gracefullyStop(mLoadLawPageTask);
+        Utils.gracefullyStop(mLoadDosePageTask);
+        Utils.gracefullyStop(mLoadChemistryPageTask);
+        Utils.gracefullyStop(mLoadResearchChemicalPageTask);
     }
 
     /**
@@ -507,61 +221,46 @@ public class SubstanceFragment extends Fragment {
         titleTextView.setText(label);
 
         Context context = getContext();
+        if (context == null) return;
 
         TableLayout tableLayout = new TableLayout(context);
-        tableLayout.setStretchAllColumns(true);
+        tableLayout.setShrinkAllColumns(true);
 
         Scanner scanner = new Scanner(table);
+        ArrayList<TableRow> rows = new ArrayList<>();
         while (scanner.hasNextLine()) {
             TableRow tableRow = new TableRow(context);
             tableRow.setGravity(Gravity.CENTER_HORIZONTAL);
+            tableRow.setBackgroundColor(Color.LTGRAY);
 
             Scanner lineScanner = new Scanner(scanner.nextLine());
             lineScanner.useDelimiter("\t");
+            ArrayList<TextView> columns = new ArrayList<>();
             while (lineScanner.hasNext()) {
                 TextView textView = new TextView(context);
                 textView.setText(lineScanner.next());
+                textView.setTextColor(Color.BLACK);
                 textView.setGravity(Gravity.CENTER_HORIZONTAL);
+                textView.setBackgroundColor(Color.WHITE);
+                columns.add(textView);
+            }
+
+            tableRow.setWeightSum((float) columns.size());
+            for (TextView textView : columns) {
+                TableRow.LayoutParams params = new TableRow.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+                params.setMargins(2, 2, 2, 2);
+                textView.setLayoutParams(params);
                 tableRow.addView(textView);
             }
-            tableLayout.addView(tableRow);
+
+            rows.add(tableRow);
         }
 
-        mLinearLayout.addView(titleTextView);
-        mLinearLayout.addView(tableLayout);
-    }
-
-    /**
-     * Creates a TableLayout from a given string and adds it to the LinearLayout.
-     *
-     * @param table string to parse into a TableLayout
-     */
-    private void addChemTable(String label, String table) {
-        TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
-        titleTextView.setText(label);
-
-        Context context = getContext();
-
-        TableLayout tableLayout = new TableLayout(context);
-        tableLayout.setStretchAllColumns(true);
-
-        Scanner scanner = new Scanner(table);
-        while (scanner.hasNextLine()) {
-            TableRow tableRow = new TableRow(context);
-            tableRow.setGravity(Gravity.CENTER_HORIZONTAL);
-
-            String text = null;
-
-            Scanner lineScanner = new Scanner(scanner.nextLine());
-            lineScanner.useDelimiter("\t");
-            while (lineScanner.hasNext()) {
-                text = lineScanner.next();
-            }
-            TextView textView = new TextView(context);
-            textView.setText(text);
-            textView.setGravity(Gravity.CENTER_HORIZONTAL);
-            tableRow.addView(textView);
-
+        tableLayout.setWeightSum(rows.size());
+        for (TableRow tableRow : rows) {
+            TableLayout.LayoutParams params = new TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1f);
+            params.setMargins(2, 2, 2, 2);
+            tableRow.setLayoutParams(params);
             tableLayout.addView(tableRow);
         }
 
@@ -647,5 +346,321 @@ public class SubstanceFragment extends Fragment {
         ClipData clipData = ClipData.newPlainText(label, text);
         clipBoard.setPrimaryClip(clipData);
         Toast.makeText(getActivity(), "Copied " + label + " to the clipboard.", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Loads the Main page of the current Substance object and creates basic views for each field.
+     */
+    public class LoadMainPageTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            EROWID_DB.loadSubstance(new IndexItem(mId, mCategory, mPages));
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            mProgressBar.setVisibility(View.GONE);
+
+            final String imageUrl = EROWID_DB.getSubstance().getImageUrl();
+            final String effectsClassification = EROWID_DB.getSubstance().getEffectsClassification();
+            final String botanicalClassification = EROWID_DB.getSubstance().getBotanicalClassification();
+            final String chemicalName = EROWID_DB.getSubstance().getChemicalName();
+            final String commonNames = EROWID_DB.getSubstance().getCommonNames();
+            final String uses = EROWID_DB.getSubstance().getUses();
+            final String description = EROWID_DB.getSubstance().getDescription();
+
+
+            if (imageUrl != null) addImage(imageUrl);
+            if (effectsClassification != null)
+                addSection("Effects Classification", effectsClassification);
+            if (botanicalClassification != null)
+                addSection("Botanical Classification", botanicalClassification);
+            if (chemicalName != null) addSection("Chemical Name", chemicalName);
+            if (commonNames != null) addSection("Common Names", commonNames);
+            if (uses != null) addSection("Uses", uses);
+            if (description != null) addSection("Description", description);
+
+            View v = getView();
+            if (v != null) v.invalidate();
+        }
+    }
+
+    /**
+     * Loads the Basics page of the current Substance object and creates basic views for each field.
+     */
+    public class LoadBasicsPageTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            EROWID_DB.loadSubstanceBasics();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (EROWID_DB.getSubstance().getBasics() == null) return;
+
+            mProgressBar.setVisibility(View.GONE);
+
+            final String description = EROWID_DB.getSubstance().getBasics().getDescription();
+            final String effects = EROWID_DB.getSubstance().getBasics().getEffects();
+            final String problems = EROWID_DB.getSubstance().getBasics().getProblems();
+            final String disclaimer = EROWID_DB.getSubstance().getBasics().getDisclaimer();
+
+            if (description != null) addSection("Description", toParagraph(description));
+            if (effects != null) addSection("Effects", toParagraph(effects));
+            if (problems != null) addSection("Problems", toParagraph(problems));
+            if (disclaimer != null) addSection("Disclaimer", toParagraph(disclaimer));
+
+            View v = getView();
+            if (v != null) v.invalidate();
+        }
+    }
+
+    /**
+     * Loads the Effectss page of the current Substance object and creates basic views for each field.
+     */
+    public class LoadEffectsPageTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            EROWID_DB.loadSubstanceEffects();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (EROWID_DB.getSubstance().getEffects() == null) return;
+
+            mProgressBar.setVisibility(View.GONE);
+
+            final String positiveEffects = EROWID_DB.getSubstance().getEffects().getPositiveEffects();
+            final String neutralEffects = EROWID_DB.getSubstance().getEffects().getNeutralEffects();
+            final String negativeEffects = EROWID_DB.getSubstance().getEffects().getNegativeEffects();
+            final String description = EROWID_DB.getSubstance().getEffects().getDescription();
+            final String disclaimer = EROWID_DB.getSubstance().getEffects().getDisclaimer();
+
+            if (positiveEffects != null)
+                addSection("Positive Effects", toBulletedList(positiveEffects));
+            if (neutralEffects != null)
+                addSection("Neutral Effects", toBulletedList(neutralEffects));
+            if (negativeEffects != null)
+                addSection("Negative Effects", toBulletedList(negativeEffects));
+            if (description != null) addSection("Description", toParagraph(description));
+            if (disclaimer != null) addSection("Disclaimer", disclaimer);
+
+            View v = getView();
+            if (v != null) v.invalidate();
+        }
+    }
+
+    /**
+     * Loads the Images page of the current Substance object and creates basic views for each field.
+     */
+    public class LoadImagesPageTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            EROWID_DB.loadSubstanceImages();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (EROWID_DB.getSubstance().getImages() == null) return;
+
+            mProgressBar.setVisibility(View.GONE);
+
+            final String imageEntryList = EROWID_DB.getSubstance().getImages().getImageEntryList();
+
+            if (imageEntryList != null) {
+                TextView titleTextView = (TextView) getLayoutInflater(null).inflate(R.layout.title_text_view, null);
+                titleTextView.setText("Image Entry List");
+                mLinearLayout.addView(titleTextView);
+
+                ArrayList<String> matches = new ArrayList<>();
+                Pattern pattern = Pattern.compile("https(\\S*?)\\s");
+                Matcher matcher = pattern.matcher(imageEntryList);
+                while (matcher.find()) {
+                    matches.add(matcher.group());
+                }
+                String linkText = imageEntryList;
+                for (String match : matches) {
+                    linkText = linkText.replace(match, "<br/><a href='" + match + "'>" + match + "</a><br/>");
+                }
+
+                Scanner scanner = new Scanner(linkText);
+                while (scanner.hasNextLine()) {
+                    TextView textView = (TextView) getLayoutInflater(null).inflate(R.layout.paragraph_text_view, null);
+                    textView.setText(Html.fromHtml(scanner.nextLine()));
+                    Linkify.addLinks(textView, Linkify.ALL);
+                    textView.setMovementMethod(LinkMovementMethod.getInstance());
+                    mLinearLayout.addView(textView);
+                }
+            }
+
+            View v = getView();
+            if (v != null) v.invalidate();
+        }
+    }
+
+    /**
+     * Loads the Health page of the current Substance object and creates basic views for each field.
+     */
+    public class LoadHealthPageTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            EROWID_DB.loadSubstanceHealth();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (EROWID_DB.getSubstance().getHealth() == null) return;
+
+            mProgressBar.setVisibility(View.GONE);
+
+            final String notes = EROWID_DB.getSubstance().getHealth().getNotes();
+            final String deaths = EROWID_DB.getSubstance().getHealth().getDeaths();
+            final String warnings = EROWID_DB.getSubstance().getHealth().getWarnings();
+            final String cautions = EROWID_DB.getSubstance().getHealth().getCautions();
+            final String benefits = EROWID_DB.getSubstance().getHealth().getBenefits();
+
+            if (notes != null) addSection("Notes", toParagraph(notes));
+            if (deaths != null) addSection("Deaths", toParagraph(deaths));
+            if (warnings != null) addSection("Warnings", toParagraph(warnings));
+            if (cautions != null) addSection("Cautions", toParagraph(cautions));
+            if (benefits != null) addSection("Benefits", toParagraph(benefits));
+
+            View v = getView();
+            if (v != null) v.invalidate();
+        }
+    }
+
+    /**
+     * Loads the Law page of the current Substance object and creates basic views for each field.
+     */
+    public class LoadLawPageTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            EROWID_DB.loadSubstanceLaw();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (EROWID_DB.getSubstance().getLaw() == null) return;
+
+            mProgressBar.setVisibility(View.GONE);
+
+            final String legalTable = EROWID_DB.getSubstance().getLaw().getLegalTable();
+            final String federalLaw = EROWID_DB.getSubstance().getLaw().getFederalLaw();
+            final String stateLaw = EROWID_DB.getSubstance().getLaw().getStateLaw();
+            final String internationalLaw = EROWID_DB.getSubstance().getLaw().getInternationalLaw();
+            final String disclaimer = EROWID_DB.getSubstance().getLaw().getDisclaimer();
+
+            if (legalTable != null) Log.d(TAG, legalTable);
+            if (federalLaw != null) Log.d(TAG, legalTable);
+            if (stateLaw != null) Log.d(TAG, legalTable);
+            if (internationalLaw != null) Log.d(TAG, legalTable);
+            if (disclaimer != null) Log.d(TAG, legalTable);
+
+            if (legalTable != null) addTable("Legal Table", legalTable);
+            if (federalLaw != null) addSection("Federal Law", toParagraph(federalLaw));
+            // TODO fix this so that a string null check isn't required
+            if (stateLaw != null && !stateLaw.equals("null"))
+                addSection("State Law", toParagraph(stateLaw));
+            if (internationalLaw != null)
+                addSection("International Law", toParagraph(internationalLaw));
+            if (disclaimer != null) addSection("Disclaimer", disclaimer);
+
+            View v = getView();
+            if (v != null) v.invalidate();
+        }
+    }
+
+    /**
+     * Loads the Dose page of the current Substance object and creates basic views for each field.
+     */
+    public class LoadDosePageTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            EROWID_DB.loadSubstanceDose();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (EROWID_DB.getSubstance().getDose() == null) return;
+
+            mProgressBar.setVisibility(View.GONE);
+
+            final String doseTable = EROWID_DB.getSubstance().getDose().getDoseTable();
+            final String doseText = EROWID_DB.getSubstance().getDose().getDoseText();
+            final String notes = EROWID_DB.getSubstance().getDose().getNotes();
+            final String disclaimer = EROWID_DB.getSubstance().getDose().getDisclaimer();
+
+            if (doseTable != null) addTable("Dose Table", doseTable);
+            if (doseText != null) addSection("Dosing", doseText);
+            // TODO fix this so that a string null check isn't required
+            if (notes != null && !notes.equals("null") && !notes.equals("None"))
+                addSection("Notes", toParagraph(notes));
+            if (disclaimer != null) addSection("Disclaimer", disclaimer);
+
+            View v = getView();
+            if (v != null) v.invalidate();
+        }
+    }
+
+    /**
+     * Loads the Chemistry page of the current Substance object and creates basic views for each field.
+     */
+    public class LoadChemistryPageTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            EROWID_DB.loadSubstanceChemistry();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (EROWID_DB.getSubstance().getChemistry() == null) return;
+
+            mProgressBar.setVisibility(View.GONE);
+
+            final String chemTable = EROWID_DB.getSubstance().getChemistry().getChemTable();
+            final String moleculeURL = EROWID_DB.getSubstance().getChemistry().getMoleculeUrl();
+
+            if (chemTable != null) addTable("Chemistry Table", chemTable);
+            if (moleculeURL != null) addImage(moleculeURL);
+
+            View v = getView();
+            if (v != null) v.invalidate();
+        }
+    }
+
+    /**
+     * Loads the ResearchChemical page of the current Substance object and creates basic views for each field.
+     */
+    public class LoadResearchChemicalPageTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            EROWID_DB.loadSubstanceResearchChemical();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (EROWID_DB.getSubstance().getResearchChemical() == null) return;
+
+            mProgressBar.setVisibility(View.GONE);
+
+            final String imageUrl = EROWID_DB.getSubstance().getResearchChemical().getImageUrl();
+            final String summary = EROWID_DB.getSubstance().getResearchChemical().getSummary();
+
+            if (imageUrl != null) addImage(imageUrl);
+            if (summary != null) addSection("Summary", toParagraph(summary));
+
+            View v = getView();
+            if (v != null) v.invalidate();
+        }
     }
 }

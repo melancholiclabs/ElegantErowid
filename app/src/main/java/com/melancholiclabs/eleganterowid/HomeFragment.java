@@ -130,49 +130,43 @@ public class HomeFragment extends Fragment {
         mChemicalsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    mSubstancesCheckBox.setChecked(false);
-                }
+                if (!isChecked) mSubstancesCheckBox.setChecked(false);
+                if (isChecked) mVaultCheckBox.setChecked(false);
             }
         });
         mPlantsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    mSubstancesCheckBox.setChecked(false);
-                }
+                if (!isChecked) mSubstancesCheckBox.setChecked(false);
+                if (isChecked) mVaultCheckBox.setChecked(false);
             }
         });
         mHerbsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    mSubstancesCheckBox.setChecked(false);
-                }
+                if (!isChecked) mSubstancesCheckBox.setChecked(false);
+                if (isChecked) mVaultCheckBox.setChecked(false);
             }
         });
         mPharmsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    mSubstancesCheckBox.setChecked(false);
-                }
+                if (!isChecked) mSubstancesCheckBox.setChecked(false);
+                if (isChecked) mVaultCheckBox.setChecked(false);
             }
         });
         mSmartsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    mSubstancesCheckBox.setChecked(false);
-                }
+                if (!isChecked) mSubstancesCheckBox.setChecked(false);
+                if (isChecked) mVaultCheckBox.setChecked(false);
             }
         });
         mAnimalsCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    mSubstancesCheckBox.setChecked(false);
-                }
+                if (!isChecked) mSubstancesCheckBox.setChecked(false);
+                if (isChecked) mVaultCheckBox.setChecked(false);
             }
         });
         mVaultCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

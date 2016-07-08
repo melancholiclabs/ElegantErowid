@@ -18,13 +18,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.melancholiclabs.eleganterowid.model.IndexItem;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 
 import java.util.Arrays;
 
 import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
-import com.melancholiclabs.eleganterowid.model.IndexItem;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         IndexFragment.OnFragmentInteractionListener, HomeFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentInteractionListener {
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String TAG = MainActivity.class.getName();
 
     /**
-     * ErowidDB to recieve data about the Erowid site.
+     * ErowidDB to receive data about the Erowid site.
      */
     private static final ErowidDB EROWID_DB = ErowidDB.getInstance();
 
